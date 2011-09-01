@@ -7,6 +7,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import br.com.pockettaxi.client.model.PedidoTaxi;
 import br.com.pokettaxi.client.R;
 import br.com.pokettaxi.client.client.utils.Coordenada;
 import br.com.pokettaxi.client.client.utils.ImagensOverlay;
@@ -24,17 +25,17 @@ public class LocalizacaoTaxistaMapActivity extends MapActivity {
 	private Handler handler = new Handler();
 	private boolean fimHandler = false;
 	// Matriz de coordenadas Latitude e Longitude de um caminho para exibir no Map
-	private double[][] coordenadas = new double[][] { 
-			{ -22.906183, -43.178244 }, { -25.443156, -49.280859 },
-			{ -25.443099, -49.280698 }, { -25.443050, -49.280548 },
-			{ -25.442953, -49.280344 }, { -25.442904, -49.280129 },
-			{ -25.442827, -49.279979 }, { -25.442770, -49.279830 },
-			{ -25.442692, -49.279626 }, { -25.442595, -49.279444 },
-			{ -25.442546, -49.279272 }, { -25.442498, -49.279132 },
-			{ -25.442440, -49.278971 }, { -25.442352, -49.278768 },
-			{ -25.442285, -49.278574 }, { -25.442207, -49.278403 },
-			{ -25.442130, -49.278220 }
-	};
+//	private double[][] coordenadas = new double[][] { 
+//			{ -22.906183, -43.178244 }, { -25.443156, -49.280859 },
+//			{ -25.443099, -49.280698 }, { -25.443050, -49.280548 },
+//			{ -25.442953, -49.280344 }, { -25.442904, -49.280129 },
+//			{ -25.442827, -49.279979 }, { -25.442770, -49.279830 },
+//			{ -25.442692, -49.279626 }, { -25.442595, -49.279444 },
+//			{ -25.442546, -49.279272 }, { -25.442498, -49.279132 },
+//			{ -25.442440, -49.278971 }, { -25.442352, -49.278768 },
+//			{ -25.442285, -49.278574 }, { -25.442207, -49.278403 },
+//			{ -25.442130, -49.278220 }
+//	};
 	private MapView mapa;
 	private MapController mapController;
 	private LocationManager locManager;
@@ -119,12 +120,12 @@ public class LocalizacaoTaxistaMapActivity extends MapActivity {
 
 	// Retorna o prximo ponto para mover o mapa
 	private GeoPoint getProximoPonto() {
-		double latitude = (coordenadas[indice][0]);
-		double longitude = (coordenadas[indice][1]);
+		double latitude = (PedidoTaxi.coordenadas[indice][1]);
+		double longitude = (PedidoTaxi.coordenadas[indice][0]);
 
 		GeoPoint p = new Coordenada(latitude, longitude);
 		indice++;
-		if (indice == coordenadas.length) {
+		if (indice == PedidoTaxi.coordenadas.length) {
 			indice = 0;
 		}
 		return p;
