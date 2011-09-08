@@ -3,7 +3,8 @@
     <wb-module deploy-name="Pocket Taxi Server">
         <wb-resource deploy-path="/" source-path="/WebContent"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <property name="context-root" value="PoketTaxi"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/shared"/>
         <property name="java-output-path" value="/Pocket Taxi Server/build/classes"/>
+        <property name="context-root" value="pockettaxi"/>
     </wb-module>
 </project-modules>

@@ -2,6 +2,13 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="src" path="shared"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="/home/pablo/Área de Trabalho/jersey-client-1.9.jar"/>
+	<classpathentry kind="lib" path="/home/pablo/Área de Trabalho/asm-3.1.jar"/>
+	<classpathentry kind="lib" path="/home/pablo/Área de Trabalho/jdo2-api-2.3-ea.jar"/>
+	<classpathentry kind="lib" path="/home/pablo/Área de Trabalho/jersey-archive-1.9.zip"/>
+	<classpathentry kind="lib" path="/home/pablo/Área de Trabalho/jersey-core-1.9.jar"/>
+	<classpathentry kind="lib" path="/home/pablo/Área de Trabalho/jersey-server-1.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

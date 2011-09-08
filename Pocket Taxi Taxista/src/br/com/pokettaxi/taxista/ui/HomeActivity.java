@@ -6,17 +6,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import br.com.pokettaxi.taxista.R;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import br.com.pokettaxi.taxista.model.Road;
-import br.com.pokettaxi.taxista.model.RoadProvider;
 
-public class HomeActivity extends Activity {
-    private Road mRoad;
-    private double fromLon = -43.178244, fromLat = -22.906183, toLon = -49.278403,  toLat= -25.442207;
-    
+public class HomeActivity extends Activity {    
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
