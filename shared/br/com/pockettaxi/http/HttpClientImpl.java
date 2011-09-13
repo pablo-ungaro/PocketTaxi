@@ -30,7 +30,7 @@ import android.util.Log;
 
 public class HttpClientImpl{
 	private String url;
-	private String resposta;
+	private String jsonResponse;
 	private HttpClient httpclient = new DefaultHttpClient();
 
 	public HttpClientImpl(String url) {
@@ -52,7 +52,7 @@ public class HttpClientImpl{
 			HttpEntity entity = response.getEntity();
 
 			if (entity != null) {
-				Log.i(CATEGORIA, "Lendo resposta...");
+				Log.i(CATEGORIA, "Lendo jsonResponse...");
 				InputStream in = entity.getContent();
 				byte[] bytes = readBytes(in);
 				Log.i(CATEGORIA, "Resposta: " + bytes);
@@ -66,11 +66,16 @@ public class HttpClientImpl{
 	
 	public void doGet(Map<Object,Object> parametros){
 		try {
-			List<NameValuePair> params = mapToNameValuePair(parametros); 
-			String query = URLEncodedUtils.format(params, "UTF-8");
-			URI uri = URIUtils.createURI(null, url, -1, null, query, null);
-			HttpGet httpget = new HttpGet(uri);
+			HttpGet httpget = null;
 			
+			if(parametros == null){
+				httpget = new HttpGet(url);
+			}else{
+				List<NameValuePair> params = mapToNameValuePair(parametros); 
+				String query = URLEncodedUtils.format(params, "UTF-8");
+				URI uri = URIUtils.createURI(null, url, -1, null, query, null);
+				httpget = new HttpGet(uri);
+			}
 			Log.i(CATEGORIA, "GET " + httpget.getURI());
 			HttpResponse response = httpclient.execute(httpget);
 
@@ -113,8 +118,8 @@ public class HttpClientImpl{
 
 		if (entity != null) {
 			InputStream in = entity.getContent();
-			resposta = readString(in);
-			Log.i(CATEGORIA, "Resposta: " + resposta);
+			jsonResponse = readString(in);
+			Log.i(CATEGORIA, "Resposta: " + jsonResponse);
 		}		
 	}
 	
@@ -157,13 +162,9 @@ public class HttpClientImpl{
 		return params;
 	}
 
-	public JSONObject json(){
-        try{          
-            JSONObject object = (JSONObject) new JSONTokener(resposta).nextValue();
-            
-            JSONObject pedidoTaxi = object.getJSONObject("pedido");
-
-            return pedidoTaxi;
+	public JSONObject getJsonResponse(){
+        try{                    
+            return (JSONObject) new JSONTokener(jsonResponse).nextValue();
         }catch (Exception e) {
             Log.e(CATEGORIA,e.toString());
         }
@@ -175,7 +176,7 @@ public class HttpClientImpl{
 	}
 
 	public String getResposta() {
-		return resposta;
+		return jsonResponse;
 	}
 
 }

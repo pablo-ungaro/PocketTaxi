@@ -3,9 +3,12 @@ package br.com.pockettaxi.http;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.android.maps.GeoPoint;
+
 import br.com.pockettaxi.model.Client;
 import br.com.pockettaxi.model.TaxiRequest;
 import br.com.pockettaxi.model.Taxi;
+import br.com.pokettaxi.utils.Position;
 
 public class JsonUtil {
 
@@ -23,8 +26,14 @@ public class JsonUtil {
 	}
 
 	private static Client getCliente(JSONObject json) throws JSONException {
-        JSONObject clienteJson = json.getJSONObject("cliente");
+        JSONObject clienteJson = json.getJSONObject("client");
        	return new Client(clienteJson.getLong("id"),clienteJson.getString("nome"));
+	}
+
+	public static GeoPoint jsonToLocation(JSONObject json) throws JSONException {
+		String latitude = json.getString("latitude");
+		String longitude = json.getString("longitude");
+		return new Position(Double.parseDouble(latitude),Double.parseDouble(longitude));
 	}
 
 }
