@@ -1,6 +1,9 @@
-package br.com.pokettaxi.client;
+package br.com.pockettaxi.client;
 
-import static br.com.pokettaxi.utils.Constants.HOST;
+import static br.com.pockettaxi.utils.Constants.*;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 import org.json.JSONException;
 
@@ -12,8 +15,10 @@ import android.widget.Toast;
 import br.com.pockettaxi.http.HttpClientImpl;
 import br.com.pockettaxi.http.JsonUtil;
 import br.com.pockettaxi.model.TaxiRequest;
-import br.com.pokettaxi.utils.Position;
-import br.com.pokettaxi.utils.ImagensOverlay;
+import br.com.pockettaxi.utils.ImagensOverlay;
+import br.com.pockettaxi.utils.Position;
+import br.com.pockettaxi.utils.Util;
+import br.com.pockettaxi.client.R;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -22,10 +27,10 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 
 public class TaxiLocationMapActivity extends MapActivity {
-	private static final String CATEGORIA = "map";
 	private static final int TEMPO = 2000;
 	private Handler handler = new Handler();
 	private boolean fimHandler = false;
+	private boolean isFocused =false;
 	private MapView map;
 	private MapController mapController;
 	private Drawable iconTaxista;
@@ -80,17 +85,18 @@ public class TaxiLocationMapActivity extends MapActivity {
 
 			@Override
 			public void run() {
-				GeoPoint localizacaoAtualTaxista = getCurrentPositionOfTaxi();
-				map.getOverlays().clear();
-
-				addOverlay(iconTaxista,localizacaoAtualTaxista,request.getTaxi().getNome(),"Viatura: "+request.getTaxi().getViatura()+".\nLatitude      Longitude\n"+localizacaoAtualTaxista);
-				addOverlay(iconClient,clientLocation,request.getClient().getNome(),"Eu estou aqui.\nLatitude      Longitude\n" + clientLocation);
-
-				mapController.animateTo(localizacaoAtualTaxista);
-				
-				// Invalida para desenhar o map novamente
-				map.invalidate();
-
+				if(isFocused){
+					GeoPoint localizacaoAtualTaxista = getCurrentPositionOfTaxi();
+					map.getOverlays().clear();
+	
+					addOverlay(iconTaxista,localizacaoAtualTaxista,request.getTaxi().getNome(),"Viatura: "+request.getTaxi().getViatura()+".\nLatitude      Longitude\n"+localizacaoAtualTaxista);
+					addOverlay(iconClient,clientLocation,request.getClient().getNome(),"Eu estou aqui.\nLatitude      Longitude\n" + clientLocation);
+	
+					mapController.animateTo(localizacaoAtualTaxista);
+					
+					// Invalida para desenhar o map novamente
+					map.invalidate();
+				}
 				// Envia a mensagem depois de 2 segundos para atualizar a coordenada do táxi
 				if (!fimHandler) {
 					handler.postDelayed(this, TEMPO);
@@ -103,13 +109,21 @@ public class TaxiLocationMapActivity extends MapActivity {
 	}
 
 	private GeoPoint getCurrentPositionOfTaxi() {
-		HttpClientImpl http = new HttpClientImpl(HOST+request.getTaxi().getId()+"/location");
-		http.doGet(null);
 		try {
+			HttpClientImpl http = new HttpClientImpl(HOST+request.getTaxi().getId()+"/location");
+			http.doGet(null);
+		
 			return JsonUtil.jsonToLocation(http.getJsonResponse());
 		} catch (JSONException e) {
 			Log.e(CATEGORIA, e.getMessage(),e);
 			Toast.makeText(this, "Erro ao tentar atualizar localização do taxista.", Toast.LENGTH_LONG);
+		} catch (IllegalStateException e) {
+			Log.e(CATEGORIA, e.getMessage(),e);
+		} catch (IOException e) {
+			Log.e(CATEGORIA, e.getMessage(),e);
+			Util.showMessage(TaxiLocationMapActivity.this,handler,"Não foi possível conectar com o servidor.",Toast.LENGTH_LONG);					
+		} catch (URISyntaxException e) {
+			Log.e(CATEGORIA, e.getMessage(),e);
 		}
 		return null;
 	}
@@ -124,5 +138,16 @@ public class TaxiLocationMapActivity extends MapActivity {
 		super.onDestroy();
 		fimHandler = true;
 	}
-
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		isFocused = false;
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		isFocused = true;
+	}
 }

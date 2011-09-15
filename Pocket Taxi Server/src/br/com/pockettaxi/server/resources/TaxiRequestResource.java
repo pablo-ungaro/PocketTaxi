@@ -23,7 +23,8 @@ public class TaxiRequestResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/request")
-	public ModelAdapter solicitarTaxi(@QueryParam("latitude")Double latitude,@QueryParam("longitude")Double longitude) {
+	public ModelAdapter taxiRequest(@QueryParam("latitude")Double latitude,@QueryParam("longitude")Double longitude) {
+		System.out.println("Cliente solicitou um taxi...");
 		ModelAdapter retorno = new ModelAdapter();
 		Client cliente = new Client(1L,"Fabio");
 		Taxi taxi = new Taxi(2L,"Fabricio",45L,-22.89326153817288,-43.12362680382098);
@@ -38,6 +39,7 @@ public class TaxiRequestResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}/location")
 	public TaxiLocation getActualPosition(@PathParam("id")Long taxiId) {
+		System.out.println("Enviando localização atual do taxista para o cliente");
 		return getProximoPonto();
 	}
 	

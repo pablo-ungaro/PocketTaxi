@@ -8,7 +8,7 @@ import com.google.android.maps.GeoPoint;
 import br.com.pockettaxi.model.Client;
 import br.com.pockettaxi.model.TaxiRequest;
 import br.com.pockettaxi.model.Taxi;
-import br.com.pokettaxi.utils.Position;
+import br.com.pockettaxi.utils.Position;
 
 public class JsonUtil {
 

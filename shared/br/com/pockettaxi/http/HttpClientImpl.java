@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,10 +22,11 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import static br.com.pokettaxi.utils.Constants.*;
+import static br.com.pockettaxi.utils.Constants.*;
 
 import android.util.Log;
 
@@ -64,8 +66,7 @@ public class HttpClientImpl{
 		return null;
 	}
 	
-	public void doGet(Map<Object,Object> parametros){
-		try {
+	public void doGet(Map<Object,Object> parametros) throws IllegalStateException, IOException, URISyntaxException{
 			HttpGet httpget = null;
 			
 			if(parametros == null){
@@ -84,16 +85,11 @@ public class HttpClientImpl{
 			Log.i(CATEGORIA, "----------------------------------------");
 
 			lerResposta(response);
-			
-		} catch (Exception e) {
-			Log.e(CATEGORIA, e.getMessage(), e);
-		}
 	}
 
 
 
-	public void doPost(Map<Object,Object> parametros) {
-		try {
+	public void doPost(Map<Object,Object> parametros) throws IOException {
 			HttpPost httpPost = new HttpPost(url);
 			List<NameValuePair> params = mapToNameValuePair(parametros);
 			httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
@@ -107,10 +103,6 @@ public class HttpClientImpl{
 			Log.i(CATEGORIA, "----------------------------------------");
 
 			lerResposta(response);
-
-		} catch (Exception e) {
-			Log.e(CATEGORIA, e.getMessage(), e);
-		}
 	}
 	
 	private void lerResposta(HttpResponse response) throws IllegalStateException, IOException {
@@ -162,13 +154,8 @@ public class HttpClientImpl{
 		return params;
 	}
 
-	public JSONObject getJsonResponse(){
-        try{                    
-            return (JSONObject) new JSONTokener(jsonResponse).nextValue();
-        }catch (Exception e) {
-            Log.e(CATEGORIA,e.toString());
-        }
-        return null;
+	public JSONObject getJsonResponse() throws JSONException{
+        return (JSONObject) new JSONTokener(jsonResponse).nextValue();       
     }
 	
 	public String getUrl() {

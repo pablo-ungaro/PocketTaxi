@@ -1,11 +1,14 @@
-package br.com.pokettaxi.client;
+package br.com.pockettaxi.client;
 
-import static br.com.pokettaxi.utils.Constants.CATEGORIA;
-import static br.com.pokettaxi.utils.Constants.HOST;
+import static br.com.pockettaxi.utils.Constants.CATEGORIA;
+import static br.com.pockettaxi.utils.Constants.HOST;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -20,9 +23,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 import br.com.pockettaxi.http.HttpClientImpl;
 import br.com.pockettaxi.http.JsonUtil;
 import br.com.pockettaxi.model.TaxiRequest;
+import br.com.pockettaxi.utils.Util;
+import br.com.pockettaxi.client.R;
 
 public class TaxiRequestActivity extends Activity {
 	private ProgressDialog loading;
@@ -70,13 +76,19 @@ public class TaxiRequestActivity extends Activity {
 					response.getClient().setLatitude(posicaoAtualCliente.getLatitude());
 					response.getClient().setLongitude(posicaoAtualCliente.getLongitude());
 					openMapWithTaxiLocation(response);
-				} catch (Exception e) {
+				} catch (IllegalStateException e) {
+					Log.e(CATEGORIA, e.getMessage(),e);
+				} catch (IOException e) {
+					Log.e(CATEGORIA, e.getMessage(),e);
+					Util.showMessage(TaxiRequestActivity.this,handler,"Não foi possível conectar com o servidor.",Toast.LENGTH_LONG);					
+				} catch (URISyntaxException e) {
+					Log.e(CATEGORIA, e.getMessage(),e);
+				} catch (JSONException e) {
 					Log.e(CATEGORIA, e.getMessage(),e);
 				}finally{
 					loading.dismiss();
 				}
-			}
-			
+			}			
 		}).start();
 	}
 

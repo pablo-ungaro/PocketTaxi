@@ -1,4 +1,4 @@
-package br.com.pokettaxi.utils;
+package br.com.pockettaxi.utils;
 
 import java.io.IOException;
 import java.util.List;
