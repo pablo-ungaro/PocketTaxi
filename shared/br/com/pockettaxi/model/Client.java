@@ -8,6 +8,7 @@ public class Client implements Serializable{
 	private String nome;
 	private Double latitude;
 	private Double longitude;
+	private String addres;
 	
 	public Client() {
 		super();
@@ -55,5 +56,13 @@ public class Client implements Serializable{
 
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
+	}
+
+	public String getAddres() {
+		return addres;
+	}
+
+	public void setAddres(String addres) {
+		this.addres = addres;
 	}
 }

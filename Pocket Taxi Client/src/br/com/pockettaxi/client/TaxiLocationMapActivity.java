@@ -110,7 +110,7 @@ public class TaxiLocationMapActivity extends MapActivity {
 
 	private GeoPoint getCurrentPositionOfTaxi() {
 		try {
-			HttpClientImpl http = new HttpClientImpl(HOST+request.getTaxi().getId()+"/location");
+			HttpClientImpl http = new HttpClientImpl(HOST+"/"+request.getTaxi().getId()+"/location");
 			http.doGet(null);
 		
 			return JsonUtil.jsonToLocation(http.getJsonResponse());

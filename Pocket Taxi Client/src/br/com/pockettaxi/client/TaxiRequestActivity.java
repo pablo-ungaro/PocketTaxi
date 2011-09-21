@@ -6,6 +6,8 @@ import static br.com.pockettaxi.utils.Constants.HOST;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -15,6 +17,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -51,31 +55,40 @@ public class TaxiRequestActivity extends Activity {
 								"Localizando táxi",
 								"Por favor aguarde enquanto estamos localizando o seu táxi.",
 								true, true);
-				findTaxi();
+				try {
+					findTaxi();
+				} catch (IOException e) {
+					Log.e(CATEGORIA, e.getMessage(),e);
+				}
 			}
 		});
 	}
 
-	private void findTaxi() {
+	private void findTaxi() throws IOException {
 		final Location posicaoAtualCliente = getMyCurrentLocation();
+		Geocoder geocoder = new Geocoder(TaxiRequestActivity.this, Locale.getDefault());
+		final Address address = geocoder.getFromLocation(posicaoAtualCliente.getLatitude(), posicaoAtualCliente.getLongitude(), 1).get(0);
 		final Map<Object,Object> parametros = new HashMap<Object, Object>();
 		parametros.put("latitude", posicaoAtualCliente.getLatitude());
 		parametros.put("longitude", posicaoAtualCliente.getLongitude());
-		
+		parametros.put("adress", address.getAddressLine(0).concat(", "+address.getAddressLine(1)));
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					HttpClientImpl http = new HttpClientImpl(HOST+"request");
+					HttpClientImpl http = new HttpClientImpl(HOST+"/request");
 					http.doGet(parametros);
 					JSONObject object = http.getJsonResponse();
 		            JSONObject pedidoTaxi = object.getJSONObject("request");
 
 					TaxiRequest response = JsonUtil.jsonToPedidoTaxi(pedidoTaxi);
 					response.getClient().setLatitude(posicaoAtualCliente.getLatitude());
-					response.getClient().setLongitude(posicaoAtualCliente.getLongitude());
+					response.getClient().setLongitude(posicaoAtualCliente.getLongitude());										
+					response.getClient().setAddres(address.getAddressLine(0).concat(", "+address.getAddressLine(1)));
+					
 					openMapWithTaxiLocation(response);
+					
 				} catch (IllegalStateException e) {
 					Log.e(CATEGORIA, e.getMessage(),e);
 				} catch (IOException e) {

@@ -1,13 +1,18 @@
 package br.com.pockettaxi.taxista.service;
 
+import static br.com.pockettaxi.utils.Constants.CATEGORIA;
+import static br.com.pockettaxi.utils.Constants.HOST;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 
-import br.com.pokettaxi.taxista.R;
-import br.com.pokettaxi.taxista.ui.VisualizarImagem;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -16,6 +21,12 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
+import br.com.pockettaxi.http.HttpClientImpl;
+import br.com.pockettaxi.http.JsonUtil;
+import br.com.pockettaxi.model.Client;
+import br.com.pockettaxi.taxista.R;
+import br.com.pockettaxi.taxista.ui.VisualizarImagem;
 
 /**
  * Serviço que faz o download de uma imagem e cria uma notificação
@@ -26,7 +37,7 @@ import android.util.Log;
 public class RecebedorDeSolicitacaoService extends Service {
 	private final String CATEGORIA = "livro";
 	private static final String URL = "http://winxlinux.com/wp-content/uploads/2009/06/wallpapers-22.jpg";
-
+	private Client client;
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -42,8 +53,27 @@ public class RecebedorDeSolicitacaoService extends Service {
 	public void onStart(Intent intent, int startId) {
 		super.onStart(intent, startId);
 		Log.i(CATEGORIA, "RecebedorDeSolicitacaoService > onStart()");
+		getInfoClient();
+	}
 
-		downloadImagem(URL);
+	private void getInfoClient() {
+		try {
+			HttpClientImpl http = new HttpClientImpl(HOST+"/infoClient");
+
+			http.doGet(null);
+			this.client = JsonUtil.jsonToClient(http.getJsonResponse());
+			Toast.makeText(this, client.getAddres(), Toast.LENGTH_LONG).show();
+
+		} catch (IllegalStateException e) {
+			Log.e(CATEGORIA, e.getMessage(),e);
+			Toast.makeText(this, "Erro ao tentar atualizar localização do taxista.", Toast.LENGTH_LONG);
+		} catch (IOException e) {
+			Log.e(CATEGORIA, e.getMessage(),e);
+		} catch (URISyntaxException e) {
+			Log.e(CATEGORIA, e.getMessage(),e);
+		} catch (JSONException e) {
+			Log.e(CATEGORIA, e.getMessage(),e);
+		}	
 	}
 
 	@Override
@@ -64,7 +94,7 @@ public class RecebedorDeSolicitacaoService extends Service {
 					URL u = new URL(URL);
 
 					HttpURLConnection connection = (HttpURLConnection) u.openConnection();
-					// Configura a requisi��o como "get"
+					// Configura a requisição como "get"
 					connection.setRequestProperty("Request-Method", "GET");
 					connection.setDoInput(true);
 					connection.setDoOutput(false);

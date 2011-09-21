@@ -36,4 +36,10 @@ public class JsonUtil {
 		return new Position(Double.parseDouble(latitude),Double.parseDouble(longitude));
 	}
 
+	public static Client jsonToClient(JSONObject jsonRoot) throws JSONException {
+        Client c = getCliente(jsonRoot);
+		c.setAddres(jsonRoot.getJSONObject("client").getString("addres"));
+		return c;
+	}
+
 }

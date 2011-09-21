@@ -7,31 +7,36 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import com.sun.jersey.spi.resource.Singleton;
-
 import br.com.pockettaxi.model.Client;
 import br.com.pockettaxi.model.Taxi;
 import br.com.pockettaxi.model.TaxiRequest;
+import br.com.pockettaxi.server.model.ClientInfo;
 import br.com.pockettaxi.server.model.ModelAdapter;
 import br.com.pockettaxi.server.model.TaxiLocation;
+
+import com.sun.jersey.spi.resource.Singleton;
 
 @Path("/taxi")
 @Singleton
 public class TaxiRequestResource {
 	private int indice = 0;
-	
+	private Client client = new Client(1L,"Fabio");
+	Taxi taxi = new Taxi(2L,"Fabricio",45L,-22.89326153817288,-43.12362680382098);
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/request")
-	public ModelAdapter taxiRequest(@QueryParam("latitude")Double latitude,@QueryParam("longitude")Double longitude) {
+	public ModelAdapter taxiRequest(@QueryParam("latitude")Double latitude,@QueryParam("longitude")Double longitude,@QueryParam("adress")String adress) {
 		System.out.println("Cliente solicitou um taxi...");
+		System.out.println("Cliente em:"+client.getAddres());
 		ModelAdapter retorno = new ModelAdapter();
-		Client cliente = new Client(1L,"Fabio");
-		Taxi taxi = new Taxi(2L,"Fabricio",45L,-22.89326153817288,-43.12362680382098);
 		TaxiRequest pedido = new TaxiRequest();
-		pedido.setClient(cliente);
+		pedido.setClient(client);
 		pedido.setTaxi(taxi);
 		retorno.setRequest(pedido);
+		client.setLatitude(latitude);
+		client.setLongitude(longitude);
+		client.setAddres(adress);
 		return retorno;
 	}
 	
@@ -42,6 +47,16 @@ public class TaxiRequestResource {
 		System.out.println("Enviando localização atual do taxista para o cliente");
 		return getProximoPonto();
 	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/infoClient")
+	public ClientInfo getClient() {
+		System.out.println("Enviando informações do cliente para o taxista");
+		ClientInfo ci = new ClientInfo();
+		ci.setClient(client);
+		return ci;
+	}	
 	
 	private TaxiLocation getProximoPonto() {
 		double latitude = (coordenadas[indice][1]);

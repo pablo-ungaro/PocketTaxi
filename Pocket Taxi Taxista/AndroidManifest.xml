@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="br.com.pokettaxi.taxista" android:versionCode="1"
+	package="br.com.pockettaxi.taxista" android:versionCode="1"
 	android:versionName="1.0.0">
+	
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	
 	<application android:icon="@drawable/icon" android:label="@string/app_name" android:theme="@android:style/Theme.Light" >
 		<!-- executa ao terminar a inicialização (boot) do sistema operacinoal -->
-		<receiver android:name=".IniciarDownload">
+		<receiver android:name=".service.RequestClientReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</receiver>
-		<service android:name=".ServicoDownloadImagem">
+		<service android:name=".service.RecebedorDeSolicitacaoService">
 			<intent-filter>
 				<action android:name="DOWNLOAD_IMAGEM" />
 				<category android:name="android.intent.category.DEFAULT" />
@@ -21,5 +23,5 @@
 		</service>
 		<activity android:name=".VisualizarImagem" />
 	</application>
-	<uses-sdk android:minSdkVersion="7" />
+	<uses-sdk android:minSdkVersion="8" />
 </manifest>
