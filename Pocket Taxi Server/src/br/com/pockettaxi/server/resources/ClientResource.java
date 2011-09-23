@@ -13,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 
 import br.com.pockettaxi.db.DataBase;
 import br.com.pockettaxi.model.Client;
-import br.com.pockettaxi.model.Race;
 import br.com.pockettaxi.model.StatusCode;
 import br.com.pockettaxi.model.Taxi;
 import br.com.pockettaxi.server.model.Client4Json;
@@ -26,7 +25,6 @@ import com.sun.jersey.spi.resource.Singleton;
 @Singleton
 public class ClientResource {
 	private DataBase db = new DataBase();
-	private static long count;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -58,12 +56,8 @@ public class ClientResource {
 			Taxi taxi = Queue.taxis.poll(TIMEOUT, TimeUnit.SECONDS);
 			
 			if (taxi != null) {//Se algum táxi respondeu
-				Race race = new Race(count++);
-				db.addRace(race);
-				race.setClient(Queue.clients.take());//retira o cliente da fila
-				race.setTaxi(taxi);
-				
-				resp.setRequest(race);
+				resp.setClient(Queue.clients.take());//retira o cliente da fila
+				resp.setTaxi(taxi);
 				resp.setStatusCode(StatusCode.OK);
 				resp.setMessage("Corrida iniciada");
 			}else{

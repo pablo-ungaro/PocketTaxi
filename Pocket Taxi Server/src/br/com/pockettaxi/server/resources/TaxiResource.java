@@ -24,7 +24,7 @@ public class TaxiResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/{taxiId}/accept/race/client/{clientId}")
+	@Path("/{taxiId}/accept/client/{clientId}")
 	public String acceptRace(@PathParam("taxiId") Long taxiId,@PathParam("clientId") Long clientId) {
 		System.out.println("Taxista aceitou a corrida");
 

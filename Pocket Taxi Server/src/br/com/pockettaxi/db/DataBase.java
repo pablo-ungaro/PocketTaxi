@@ -4,13 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.pockettaxi.model.Client;
-import br.com.pockettaxi.model.Race;
 import br.com.pockettaxi.model.Taxi;
 
 public class DataBase {
 	private Map<Long,Client> clients = new HashMap<Long,Client>();
 	private Map<Long,Taxi> taxis = new HashMap<Long,Taxi>();
-	private Map<Long,Race> racing = new HashMap<Long,Race>();
 
 	public DataBase(){
 		clients.put(1L, new Client(1L, "Pablo"));
@@ -30,13 +28,5 @@ public class DataBase {
 	
 	public Client findClientById(Long id){
 		return clients.get(id);
-	}
-	
-	public void addRace(Race race){
-		racing.put(race.getId(), race);
-	}
-
-	public Race getRace(Long id) {
-		return racing.get(id);
 	}
 }
