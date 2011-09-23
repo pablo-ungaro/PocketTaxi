@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import com.google.android.maps.GeoPoint;
 
 import br.com.pockettaxi.model.Client;
-import br.com.pockettaxi.model.TaxiRequest;
+import br.com.pockettaxi.model.Race;
 import br.com.pockettaxi.model.Taxi;
 import br.com.pockettaxi.utils.Position;
 
@@ -38,7 +38,7 @@ public class JsonUtil {
 
 	public static Client jsonToClient(JSONObject jsonRoot) throws JSONException {
         Client c = getCliente(jsonRoot);
-		c.setAddres(jsonRoot.getJSONObject("client").getString("addres"));
+		c.setAddress(jsonRoot.getJSONObject("client").getString("address"));
 		return c;
 	}
 

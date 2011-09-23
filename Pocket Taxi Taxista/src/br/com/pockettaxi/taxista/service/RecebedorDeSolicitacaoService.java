@@ -1,6 +1,5 @@
 package br.com.pockettaxi.taxista.service;
 
-import static br.com.pockettaxi.utils.Constants.CATEGORIA;
 import static br.com.pockettaxi.utils.Constants.HOST;
 
 import java.io.ByteArrayOutputStream;
@@ -11,9 +10,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -61,19 +59,48 @@ public class RecebedorDeSolicitacaoService extends Service {
 			HttpClientImpl http = new HttpClientImpl(HOST+"/infoClient");
 
 			http.doGet(null);
-			this.client = JsonUtil.jsonToClient(http.getJsonResponse());
-			Toast.makeText(this, client.getAddres(), Toast.LENGTH_LONG).show();
-
+			this.client = new Client();//JsonUtil.jsonToClient(http.getJsonResponse());
+			client.setNome("Nome cliente");
+			client.setAddres("rua nao sei o que nao sei o q lah");
+			
+			showNotification(client);
+			
 		} catch (IllegalStateException e) {
 			Log.e(CATEGORIA, e.getMessage(),e);
 			Toast.makeText(this, "Erro ao tentar atualizar localização do taxista.", Toast.LENGTH_LONG);
 		} catch (IOException e) {
 			Log.e(CATEGORIA, e.getMessage(),e);
 		} catch (URISyntaxException e) {
-			Log.e(CATEGORIA, e.getMessage(),e);
-		} catch (JSONException e) {
-			Log.e(CATEGORIA, e.getMessage(),e);
-		}	
+			Log.e(CATEGORIA, e.getMessage(),e);}
+//		} catch (JSONException e) {
+//			Log.e(CATEGORIA, e.getMessage(),e);
+//		}	
+	}
+
+	private void showNotification(Client client) {
+		String messageBar = "Nova solicitação de taxi.";
+		String titulo = "Client: "+ client.getNome();
+		String mensagem = "Endereço: "+client.getAddres();
+		Class<? extends Activity> activity = VisualizarImagem.class;
+
+		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+		Notification notificationBar = new Notification(R.drawable.smile, messageBar, System.currentTimeMillis());
+
+		// PendingIntent para executar a Activity se o usuário selecionar a notificação
+		Intent intentMensagem = new Intent(this, activity);
+		intentMensagem.putExtra("client", client);
+		PendingIntent p = PendingIntent.getActivity(this, 0, intentMensagem, 0);
+
+		// Informações
+		notificationBar.setLatestEventInfo(this, titulo, mensagem, p);
+
+		// Precisa de permissão: <uses-permission android:name="android.permission.VIBRATE" />
+		// espera 100ms e vibra por 250ms, depois espera por 100 ms e vibra por 500ms.
+		notificationBar.vibrate = new long[] { 100, 250, 100, 500 };
+
+		// id (número único) que identifica esta notificação. Mesmo id utilizado para cancelar
+		nm.notify(R.string.app_name, notificationBar);		
 	}
 
 	@Override
@@ -82,93 +109,4 @@ public class RecebedorDeSolicitacaoService extends Service {
 		Log.i(CATEGORIA, "RecebedorDeSolicitacaoService > onDestroy()");
 	}
 
-	private void downloadImagem(final String urlImg) {
-		new Thread() {
-			@Override
-			public void run() {
-
-				try {
-					Log.i(CATEGORIA, "RecebedorDeSolicitacaoService > Buscando imagem...");
-
-					// Cria a URL
-					URL u = new URL(URL);
-
-					HttpURLConnection connection = (HttpURLConnection) u.openConnection();
-					// Configura a requisição como "get"
-					connection.setRequestProperty("Request-Method", "GET");
-					connection.setDoInput(true);
-					connection.setDoOutput(false);
-
-					connection.connect();
-
-					InputStream in = connection.getInputStream();
-
-					Log.i(CATEGORIA, "RecebedorDeSolicitacaoService > Lendo imagem...");
-
-					// String arquivo = readBufferedString(sb, in);
-					byte[] bytesImagem = readBytes(in);
-
-					Log.i(CATEGORIA, "RecebedorDeSolicitacaoService > Imagem lida com sucesso!");
-
-					connection.disconnect();
-
-					Log.i(CATEGORIA, "RecebedorDeSolicitacaoService > Criando notifica��o...");
-
-					criarNotificacao(bytesImagem);
-
-					Log.i(CATEGORIA, "RecebedorDeSolicitacaoService > Notifica��o criada com sucesso.");
-
-					stopSelf();
-
-				} catch (IOException e) {
-					Log.e(CATEGORIA, e.getMessage(), e);
-				}
-			}
-		}.start();
-	}
-
-	private byte[] readBytes(InputStream in) throws IOException {
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		try {
-			byte[] buffer = new byte[1024];
-			int len;
-			while ((len = in.read(buffer)) > 0) {
-				bos.write(buffer, 0, len);
-			}
-			byte[] bytes = bos.toByteArray();
-			return bytes;
-		} finally {
-			bos.close();
-			in.close();
-		}
-	}
-
-	// Exibe a notifica��o
-	protected void criarNotificacao(byte[] bytesImagem) {
-
-		String mensagemBarraStatus = "Fim do download.";
-		String titulo = "Download completo.";
-		String mensagem = "Visualizar imagem do download.";
-		Class<?> activity = VisualizarImagem.class;
-
-		// Service
-		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-		Notification notificacao = new Notification(R.drawable.smile, mensagemBarraStatus, System.currentTimeMillis());
-
-		// PendingIntent para executar a Activity se o usu�rio selecionar a notifica��o
-		Intent intentMensagem = new Intent(this, activity);
-		intentMensagem.putExtra("imagem", bytesImagem);
-		PendingIntent p = PendingIntent.getActivity(this, 0, intentMensagem, 0);
-
-		// Informa��es
-		notificacao.setLatestEventInfo(this, titulo, mensagem, p);
-
-		// Precisa de permiss�o: <uses-permission android:name="android.permission.VIBRATE" />
-		// espera 100ms e vibra por 250ms, depois espera por 100 ms e vibra por 500ms.
-		notificacao.vibrate = new long[] { 100, 250, 100, 500 };
-
-		// id (n�mero �nico) que identifica esta notifica��o. Mesmo id utilizado para cancelar
-		nm.notify(R.string.app_name, notificacao);
-	}
 }

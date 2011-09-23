@@ -2,17 +2,17 @@ package br.com.pockettaxi.server.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import br.com.pockettaxi.model.TaxiRequest;
+import br.com.pockettaxi.model.Race;
 
 @XmlRootElement
 public class ModelAdapter {
-	private TaxiRequest request;
+	private Race request;
 
-	public TaxiRequest getRequest() {
+	public Race getRequest() {
 		return request;
 	}
 
-	public void setRequest(TaxiRequest request) {
+	public void setRequest(Race request) {
 		this.request = request;
 	}
 }

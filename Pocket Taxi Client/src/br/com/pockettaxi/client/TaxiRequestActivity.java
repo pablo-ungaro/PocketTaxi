@@ -6,7 +6,6 @@ import static br.com.pockettaxi.utils.Constants.HOST;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -32,7 +31,6 @@ import br.com.pockettaxi.http.HttpClientImpl;
 import br.com.pockettaxi.http.JsonUtil;
 import br.com.pockettaxi.model.TaxiRequest;
 import br.com.pockettaxi.utils.Util;
-import br.com.pockettaxi.client.R;
 
 public class TaxiRequestActivity extends Activity {
 	private ProgressDialog loading;
@@ -71,7 +69,7 @@ public class TaxiRequestActivity extends Activity {
 		final Map<Object,Object> parametros = new HashMap<Object, Object>();
 		parametros.put("latitude", posicaoAtualCliente.getLatitude());
 		parametros.put("longitude", posicaoAtualCliente.getLongitude());
-		parametros.put("adress", address.getAddressLine(0).concat(", "+address.getAddressLine(1)));
+		parametros.put("address", address.getAddressLine(0).concat(", "+address.getAddressLine(1)));
 		new Thread(new Runnable() {
 
 			@Override
@@ -85,7 +83,7 @@ public class TaxiRequestActivity extends Activity {
 					TaxiRequest response = JsonUtil.jsonToPedidoTaxi(pedidoTaxi);
 					response.getClient().setLatitude(posicaoAtualCliente.getLatitude());
 					response.getClient().setLongitude(posicaoAtualCliente.getLongitude());										
-					response.getClient().setAddres(address.getAddressLine(0).concat(", "+address.getAddressLine(1)));
+					response.getClient().setAddress(address.getAddressLine(0).concat(", "+address.getAddressLine(1)));
 					
 					openMapWithTaxiLocation(response);
 					
