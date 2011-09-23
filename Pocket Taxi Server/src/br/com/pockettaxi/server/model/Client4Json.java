@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import br.com.pockettaxi.model.Client;
 
 @XmlRootElement
-public class ClientInQueue {
+public class Client4Json extends Response{
 	private Client client;
 	
 	public Client getClient() {

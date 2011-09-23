@@ -12,6 +12,10 @@ public class Race implements Serializable {
 		super();
 	}
 	
+	public Race(Long id) {
+		this.id = id;
+	}
+	
 	public Race(Long id, Taxi taxi, Client client) {
 		super();
 		this.id = id;

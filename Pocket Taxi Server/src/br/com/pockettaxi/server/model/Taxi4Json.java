@@ -3,15 +3,15 @@ package br.com.pockettaxi.server.model;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class TaxiLocation {	
+public class Taxi4Json {	
 	private Double latitude;
 	private Double longitude;	
 	
-	public TaxiLocation(){
+	public Taxi4Json(){
 		super();
 	}
 	
-	public TaxiLocation(Double latitude, Double longitude) {
+	public Taxi4Json(Double latitude, Double longitude) {
 		super();
 		this.latitude = latitude;
 		this.longitude = longitude;
