@@ -6,8 +6,8 @@ import java.util.Date;
 public class Taxi implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private Long id;
-	private String nome;
-	private Long viatura;
+	private String name;
+	private Long car;
 	private Double latitude;
 	private Double longitude;
 	private Date lastUpdate;
@@ -17,10 +17,10 @@ public class Taxi implements Serializable{
 	}
 	
 		
-	public Taxi(Long id, String nome, Long viatura,Double latitude, Double longitude) {
+	public Taxi(Long id, String name, Long car,Double latitude, Double longitude) {
 		this.id = id;
-		this.nome = nome;
-		this.viatura = viatura;
+		this.name = name;
+		this.car = car;
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
@@ -33,20 +33,20 @@ public class Taxi implements Serializable{
 		this.id = id;
 	}
 	
-	public String getNome() {
-		return nome;
+	public String getName() {
+		return name;
 	}
 	
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
-	public Long getViatura() {
-		return viatura;
+	public Long getCar() {
+		return car;
 	}
 	
-	public void setViatura(Long viatura) {
-		this.viatura = viatura;
+	public void setCar(Long car) {
+		this.car = car;
 	}
 
 	public Double getLatitude() {
@@ -74,6 +74,11 @@ public class Taxi implements Serializable{
 
 	public void setLastUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 	
 	@Override

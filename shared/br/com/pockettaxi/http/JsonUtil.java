@@ -3,31 +3,34 @@ package br.com.pockettaxi.http;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.android.maps.GeoPoint;
-
 import br.com.pockettaxi.model.Client;
-import br.com.pockettaxi.model.Race;
 import br.com.pockettaxi.model.Taxi;
 import br.com.pockettaxi.utils.Position;
 
+import com.google.android.maps.GeoPoint;
+
 public class JsonUtil {
 
-	public static TaxiRequest jsonToPedidoTaxi(JSONObject json) throws JSONException {
-		Client cliente = getCliente(json);
-		Taxi taxi = getTaxi(json);
-		
-		TaxiRequest resp = new TaxiRequest(taxi, cliente);
-		return resp;
-	}
-
-	private static Taxi getTaxi(JSONObject json) throws JSONException {
+	public static Taxi jsonToTaxi(JSONObject json) throws JSONException{
         JSONObject taxiJson = json.getJSONObject("taxi");
-		return new Taxi(taxiJson.getLong("id"), taxiJson.getString("nome"), taxiJson.getLong("viatura"),taxiJson.getDouble("latitude"),taxiJson.getDouble("longitude"));
+        Taxi taxi = new Taxi();
+        taxi.setId(taxiJson.getLong("id"));
+        taxi.setCar(taxiJson.getLong("car"));
+        taxi.setLatitude(taxiJson.getDouble("latitude"));
+        taxi.setLongitude(taxiJson.getDouble("longitude"));
+        taxi.setName(taxiJson.getString("name"));
+		return taxi;
 	}
 
-	private static Client getCliente(JSONObject json) throws JSONException {
-        JSONObject clienteJson = json.getJSONObject("client");
-       	return new Client(clienteJson.getLong("id"),clienteJson.getString("nome"));
+	public static Client jsonToClient(JSONObject json) throws JSONException{
+        JSONObject clientJson = json.getJSONObject("client");
+        Client client = new Client();
+        client.setId(clientJson.getLong("id"));
+        client.setName(clientJson.getString("name"));
+        client.setLatitude(clientJson.getDouble("latitude"));
+        client.setLongitude(clientJson.getDouble("longitude"));
+        client.setAddress(clientJson.getString("address"));
+       	return client;
 	}
 
 	public static GeoPoint jsonToLocation(JSONObject json) throws JSONException {
@@ -35,11 +38,4 @@ public class JsonUtil {
 		String longitude = json.getString("longitude");
 		return new Position(Double.parseDouble(latitude),Double.parseDouble(longitude));
 	}
-
-	public static Client jsonToClient(JSONObject jsonRoot) throws JSONException {
-        Client c = getCliente(jsonRoot);
-		c.setAddress(jsonRoot.getJSONObject("client").getString("address"));
-		return c;
-	}
-
 }

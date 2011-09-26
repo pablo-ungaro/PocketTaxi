@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Client implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;
-	private String nome;
+	private String name;
 	private Double latitude;
 	private Double longitude;
 	private String address;
@@ -14,10 +14,14 @@ public class Client implements Serializable {
 		super();
 	}
 
-	public Client(Long id, String nome) {
+	public Client(Long id, String name, Double latitude, Double longitude,
+			String address) {
 		super();
 		this.id = id;
-		this.nome = nome;
+		this.name = name;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.address = address;
 	}
 
 	public Long getId() {
@@ -28,17 +32,17 @@ public class Client implements Serializable {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
+	public String getName() {
+		return name;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
 	public String toString() {
-		return nome;
+		return name;
 	}
 
 	public Double getLatitude() {

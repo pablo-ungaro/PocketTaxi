@@ -34,7 +34,7 @@ public class ClientResource {
 											@QueryParam("longitude") Double longitude,
 												@QueryParam("address") String address) {
 		
-		System.out.println("Cliente " + clientId +"solicitou um táxi...");
+		System.out.println("Cliente " + clientId +" solicitou um táxi...");
 		
 		Race4Json resp = new Race4Json();		
 		Client client = db.findClientById(clientId);
@@ -74,7 +74,7 @@ public class ClientResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/hasClient")
+	@Path("/has-client")
 	public Client4Json getClientInQueue() {
 		System.out.println("Enviando informações do cliente para o taxista");
 		

@@ -22,7 +22,6 @@ import com.sun.jersey.spi.resource.Singleton;
 @Singleton
 public class TaxiResource {
 	private DataBase db = new DataBase();
-	//private int indice = 0;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -48,6 +47,8 @@ public class TaxiResource {
 	@Path("/{id}/location")
 	public Taxi4Json getActualPosition(@PathParam("id") Long taxiId) {
 		System.out.println("Enviando localização atual do taxista para o cliente");
+		//remover 
+		setProximoPonto(taxiId);
 		return new Taxi4Json(db.findTaxiById(taxiId));
 	}
 	
@@ -71,17 +72,20 @@ public class TaxiResource {
 		return resp;
 	}
 	
-//	private Taxi4Json getProximoPonto() {
-//		double latitude = (coordenadas[indice][1]);
-//		double longitude = (coordenadas[indice][0]);
-//
-//		Taxi4Json p = new Taxi4Json(latitude, longitude);
-//		indice++;
-//		if (indice == coordenadas.length) {
-//			indice = 0;
-//		}
-//		return p;
-//	}
+	private int indice = 0;
+
+	private void setProximoPonto(Long taxiId) {
+		double latitude = (coordenadas[indice][1]);
+		double longitude = (coordenadas[indice][0]);
+
+		db.findTaxiById(taxiId).setLatitude(latitude);
+		db.findTaxiById(taxiId).setLongitude(longitude);
+
+		indice++;
+		if (indice == coordenadas.length) {
+			indice = 0;
+		}
+	}
 	
 	public static double[][] coordenadas = new double[][] {
 		// longitude //latitude

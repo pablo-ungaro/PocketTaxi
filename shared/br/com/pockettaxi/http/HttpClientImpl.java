@@ -32,7 +32,6 @@ import android.util.Log;
 
 public class HttpClientImpl{
 	private String url;
-	private String jsonResponse;
 	private HttpClient httpclient = new DefaultHttpClient();
 
 	public HttpClientImpl(String url) {
@@ -66,30 +65,30 @@ public class HttpClientImpl{
 		return null;
 	}
 	
-	public void doGet(Map<Object,Object> parametros) throws IllegalStateException, IOException, URISyntaxException{
-			HttpGet httpget = null;
-			
-			if(parametros == null){
-				httpget = new HttpGet(url);
-			}else{
-				List<NameValuePair> params = mapToNameValuePair(parametros); 
-				String query = URLEncodedUtils.format(params, "UTF-8");
-				URI uri = URIUtils.createURI(null, url, -1, null, query, null);
-				httpget = new HttpGet(uri);
-			}
-			Log.i(CATEGORIA, "GET " + httpget.getURI());
-			HttpResponse response = httpclient.execute(httpget);
+	public JSONObject doGet(Map<Object,Object> parametros) throws IllegalStateException, IOException, URISyntaxException, JSONException{
+		HttpGet httpget = null;
+		
+		if(parametros == null){
+			httpget = new HttpGet(url);
+		}else{
+			List<NameValuePair> params = mapToNameValuePair(parametros); 
+			String query = URLEncodedUtils.format(params, "UTF-8");
+			URI uri = URIUtils.createURI(null, url, -1, null, query, null);
+			httpget = new HttpGet(uri);
+		}
+		Log.i(CATEGORIA, "GET " + httpget.getURI());
+		HttpResponse response = httpclient.execute(httpget);
 
-			Log.i(CATEGORIA, "----------------------------------------");
-			Log.i(CATEGORIA, String.valueOf(response.getStatusLine()));
-			Log.i(CATEGORIA, "----------------------------------------");
+		Log.i(CATEGORIA, "----------------------------------------");
+		Log.i(CATEGORIA, String.valueOf(response.getStatusLine()));
+		Log.i(CATEGORIA, "----------------------------------------");
 
-			lerResposta(response);
+		return processRequest(response);
 	}
 
 
 
-	public void doPost(Map<Object,Object> parametros) throws IOException {
+	public JSONObject doPost(Map<Object,Object> parametros) throws IOException, IllegalStateException, JSONException {
 			HttpPost httpPost = new HttpPost(url);
 			List<NameValuePair> params = mapToNameValuePair(parametros);
 			httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
@@ -102,17 +101,20 @@ public class HttpClientImpl{
 			Log.i(CATEGORIA, String.valueOf(response.getStatusLine()));
 			Log.i(CATEGORIA, "----------------------------------------");
 
-			lerResposta(response);
+			return processRequest(response);
 	}
 	
-	private void lerResposta(HttpResponse response) throws IllegalStateException, IOException {
+	private JSONObject processRequest(HttpResponse response) throws IllegalStateException, IOException, JSONException {
 		HttpEntity entity = response.getEntity();
 
 		if (entity != null) {
 			InputStream in = entity.getContent();
-			jsonResponse = readString(in);
-			Log.i(CATEGORIA, "Resposta: " + jsonResponse);
-		}		
+			String resposta = readString(in);
+			Log.i(CATEGORIA, "Resposta: " + resposta);
+			return (JSONObject) new JSONTokener(resposta).nextValue();
+		}
+		
+		return null;
 	}
 	
 	private byte[] readBytes(InputStream in) throws IOException {
@@ -133,8 +135,8 @@ public class HttpClientImpl{
 
 	private String readString(InputStream in) throws IOException {
 		byte[] bytes = readBytes(in);
-		String texto = new String(bytes);
-		return texto;
+		String text = new String(bytes);
+		return text;
 	}
 
 	private List<NameValuePair> mapToNameValuePair(Map<Object,Object> parametros) throws IOException {
@@ -153,17 +155,4 @@ public class HttpClientImpl{
 
 		return params;
 	}
-
-	public JSONObject getJsonResponse() throws JSONException{
-        return (JSONObject) new JSONTokener(jsonResponse).nextValue();       
-    }
-	
-	public String getUrl() {
-		return url;
-	}
-
-	public String getResposta() {
-		return jsonResponse;
-	}
-
 }

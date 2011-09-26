@@ -1,7 +1,8 @@
 package br.com.pockettaxi.client;
 
 import static br.com.pockettaxi.utils.Constants.CATEGORIA;
-import static br.com.pockettaxi.utils.Constants.HOST;
+import static br.com.pockettaxi.utils.Util.getUrlRequest;
+import static br.com.pockettaxi.utils.Util.showMessage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -29,8 +30,8 @@ import android.widget.Button;
 import android.widget.Toast;
 import br.com.pockettaxi.http.HttpClientImpl;
 import br.com.pockettaxi.http.JsonUtil;
-import br.com.pockettaxi.model.TaxiRequest;
-import br.com.pockettaxi.utils.Util;
+import br.com.pockettaxi.model.Client;
+import br.com.pockettaxi.model.Taxi;
 
 public class TaxiRequestActivity extends Activity {
 	private ProgressDialog loading;
@@ -57,41 +58,39 @@ public class TaxiRequestActivity extends Activity {
 					findTaxi();
 				} catch (IOException e) {
 					Log.e(CATEGORIA, e.getMessage(),e);
-				}
+				}			
 			}
 		});
 	}
 
 	private void findTaxi() throws IOException {
-		final Location posicaoAtualCliente = getMyCurrentLocation();
+		final Location myActualPosition = getMyCurrentLocation();
 		Geocoder geocoder = new Geocoder(TaxiRequestActivity.this, Locale.getDefault());
-		final Address address = geocoder.getFromLocation(posicaoAtualCliente.getLatitude(), posicaoAtualCliente.getLongitude(), 1).get(0);
-		final Map<Object,Object> parametros = new HashMap<Object, Object>();
-		parametros.put("latitude", posicaoAtualCliente.getLatitude());
-		parametros.put("longitude", posicaoAtualCliente.getLongitude());
-		parametros.put("address", address.getAddressLine(0).concat(", "+address.getAddressLine(1)));
+		final Address address = geocoder.getFromLocation(myActualPosition.getLatitude(), myActualPosition.getLongitude(), 1).get(0);
+		final Map<Object,Object> parameters = new HashMap<Object, Object>();
+		
+		parameters.put("latitude", myActualPosition.getLatitude());
+		parameters.put("longitude", myActualPosition.getLongitude());
+		parameters.put("address", createAddress(address));
+		
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					HttpClientImpl http = new HttpClientImpl(HOST+"/request");
-					http.doGet(parametros);
-					JSONObject object = http.getJsonResponse();
-		            JSONObject pedidoTaxi = object.getJSONObject("request");
+					HttpClientImpl http = new HttpClientImpl(getUrlRequest(1L));
+					JSONObject resp = http.doGet(parameters);
 
-					TaxiRequest response = JsonUtil.jsonToPedidoTaxi(pedidoTaxi);
-					response.getClient().setLatitude(posicaoAtualCliente.getLatitude());
-					response.getClient().setLongitude(posicaoAtualCliente.getLongitude());										
-					response.getClient().setAddress(address.getAddressLine(0).concat(", "+address.getAddressLine(1)));
+					Taxi taxi = JsonUtil.jsonToTaxi(resp);
+					Client client = JsonUtil.jsonToClient(resp);
 					
-					openMapWithTaxiLocation(response);
+					openMapWithTaxiLocation(taxi,client);
 					
 				} catch (IllegalStateException e) {
 					Log.e(CATEGORIA, e.getMessage(),e);
 				} catch (IOException e) {
 					Log.e(CATEGORIA, e.getMessage(),e);
-					Util.showMessage(TaxiRequestActivity.this,handler,"Não foi possível conectar com o servidor.",Toast.LENGTH_LONG);					
+					showMessage(TaxiRequestActivity.this,handler,"Não foi possível conectar com o servidor.",Toast.LENGTH_LONG);					
 				} catch (URISyntaxException e) {
 					Log.e(CATEGORIA, e.getMessage(),e);
 				} catch (JSONException e) {
@@ -101,6 +100,10 @@ public class TaxiRequestActivity extends Activity {
 				}
 			}			
 		}).start();
+	}
+
+	private String createAddress(Address address) {
+		return address.getAddressLine(0).concat(", "+address.getAddressLine(1));
 	}
 
 	private Location getMyCurrentLocation() {
@@ -117,14 +120,15 @@ public class TaxiRequestActivity extends Activity {
 		return currentLocation;
 	}
 
-	private void openMapWithTaxiLocation(final TaxiRequest response) {
+	private void openMapWithTaxiLocation(final Taxi taxi,final Client client) {
 			handler.post(new Runnable() {
 
 				@Override
 				public void run() {
 					Intent it = new Intent(TaxiRequestActivity.this,TaxiLocationMapActivity.class);
 					Bundle bundle = new Bundle();
-					bundle.putSerializable("response", response);
+					bundle.putSerializable("taxi", taxi);
+					bundle.putSerializable("client", client);
 					it.putExtras(bundle);
 					startActivity(it);
 				}
