@@ -2,31 +2,26 @@ package br.com.pockettaxi.server.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import br.com.pockettaxi.model.Taxi;
+
 @XmlRootElement
-public class Taxi4Json {	
-	private Double latitude;
-	private Double longitude;	
+public class Taxi4Json extends Response{	
+	private Taxi taxi;
 	
 	public Taxi4Json(){
 		super();
 	}
 	
-	public Taxi4Json(Double latitude, Double longitude) {
+	public Taxi4Json(Taxi taxi){
 		super();
-		this.latitude = latitude;
-		this.longitude = longitude;
+		this.taxi = taxi;
 	}
-	
-	public Double getLatitude() {
-		return latitude;
+
+	public Taxi getTaxi() {
+		return taxi;
 	}
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
-	}
-	public Double getLongitude() {
-		return longitude;
-	}
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
+
+	public void setTaxi(Taxi taxi) {
+		this.taxi = taxi;
 	}
 }

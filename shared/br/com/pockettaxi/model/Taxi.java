@@ -1,6 +1,7 @@
 package br.com.pockettaxi.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Taxi implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -9,6 +10,7 @@ public class Taxi implements Serializable{
 	private Long viatura;
 	private Double latitude;
 	private Double longitude;
+	private Date lastUpdate;
 	
 	public Taxi() {
 		super();
@@ -64,6 +66,14 @@ public class Taxi implements Serializable{
 
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
+	}
+	
+	public Date getLastUpdate() {
+		return lastUpdate;
+	}
+
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
 	}
 	
 	@Override

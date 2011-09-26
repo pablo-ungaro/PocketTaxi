@@ -1,5 +1,7 @@
 package br.com.pockettaxi.server.resources;
 
+import java.util.Date;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -20,7 +22,7 @@ import com.sun.jersey.spi.resource.Singleton;
 @Singleton
 public class TaxiResource {
 	private DataBase db = new DataBase();
-	private int indice = 0;
+	//private int indice = 0;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -44,23 +46,42 @@ public class TaxiResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}/location")
-	public Taxi4Json getActualPosition(@PathParam("id") Long taxiId,@QueryParam("raceId") Long raceId) {
-		System.out
-				.println("Enviando localização atual do taxista para o cliente");
-		return getProximoPonto();
+	public Taxi4Json getActualPosition(@PathParam("id") Long taxiId) {
+		System.out.println("Enviando localização atual do taxista para o cliente");
+		return new Taxi4Json(db.findTaxiById(taxiId));
 	}
 	
-	private Taxi4Json getProximoPonto() {
-		double latitude = (coordenadas[indice][1]);
-		double longitude = (coordenadas[indice][0]);
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/{id}/set-location")
+	public Taxi4Json setActualPosition(@PathParam("id") Long taxiId, 
+											@QueryParam("latitude") Double latitude,
+												@QueryParam("longitude") Double longitude) {
+		
+		System.out.println("Atualizando posição do taxista " + taxiId);
+		
+		db.findTaxiById(taxiId).setLatitude(latitude);
+		db.findTaxiById(taxiId).setLongitude(longitude);
+		db.findTaxiById(taxiId).setLastUpdate(new Date());
 
-		Taxi4Json p = new Taxi4Json(latitude, longitude);
-		indice++;
-		if (indice == coordenadas.length) {
-			indice = 0;
-		}
-		return p;
+		Taxi4Json resp = new Taxi4Json();
+		resp.setMessage("Posição atualizada com sucesso.");
+		resp.setStatusCode(StatusCode.OK);
+		
+		return resp;
 	}
+	
+//	private Taxi4Json getProximoPonto() {
+//		double latitude = (coordenadas[indice][1]);
+//		double longitude = (coordenadas[indice][0]);
+//
+//		Taxi4Json p = new Taxi4Json(latitude, longitude);
+//		indice++;
+//		if (indice == coordenadas.length) {
+//			indice = 0;
+//		}
+//		return p;
+//	}
 	
 	public static double[][] coordenadas = new double[][] {
 		// longitude //latitude
