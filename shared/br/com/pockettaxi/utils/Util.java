@@ -1,9 +1,10 @@
 package br.com.pockettaxi.utils;
 
+import static br.com.pockettaxi.utils.Constants.HOST;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.widget.Toast;
-import static br.com.pockettaxi.utils.Constants.*;
 
 public class Util {
 	
@@ -15,6 +16,18 @@ public class Util {
 				Toast.makeText(ctx, msg, duration).show();							
 			}
 		});		
+	}
+	
+	public static void showSimpleDialog(final Context ctx,Handler handler,final int message){
+			handler.post(new Runnable() {
+			
+			@Override
+			public void run() {
+			 	new AlertDialog.Builder(ctx)
+			 		.setMessage(message)
+			 		.setPositiveButton("OK", null).show();
+			}
+		});
 	}
 	
 	public static String getUrlRequest(Long clientId){

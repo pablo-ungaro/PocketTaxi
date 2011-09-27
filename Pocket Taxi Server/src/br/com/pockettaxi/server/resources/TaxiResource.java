@@ -46,9 +46,10 @@ public class TaxiResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}/location")
 	public Taxi4Json getActualPosition(@PathParam("id") Long taxiId) {
-		System.out.println("Enviando localização atual do taxista para o cliente");
 		//remover 
 		setProximoPonto(taxiId);
+		System.out.println("Enviando localização atual do taxista para o cliente.");
+		System.out.println(String.format("Latitude: %f - Longitude: %f", db.findTaxiById(taxiId).getLatitude(),db.findTaxiById(taxiId).getLongitude()));
 		return new Taxi4Json(db.findTaxiById(taxiId));
 	}
 	

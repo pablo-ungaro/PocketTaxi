@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import br.com.pockettaxi.model.Client;
+import br.com.pockettaxi.model.StatusCode;
 import br.com.pockettaxi.model.Taxi;
 import br.com.pockettaxi.utils.Position;
 
@@ -37,5 +38,9 @@ public class JsonUtil {
 		String latitude = json.getString("latitude");
 		String longitude = json.getString("longitude");
 		return new Position(Double.parseDouble(latitude),Double.parseDouble(longitude));
+	}
+
+	public static StatusCode jsonToStatusCode(JSONObject json) throws JSONException {
+		return StatusCode.toEnum(json.getString("statusCode"));
 	}
 }

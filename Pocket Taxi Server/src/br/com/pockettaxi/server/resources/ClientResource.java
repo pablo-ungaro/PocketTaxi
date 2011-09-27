@@ -34,7 +34,7 @@ public class ClientResource {
 											@QueryParam("longitude") Double longitude,
 												@QueryParam("address") String address) {
 		
-		System.out.println("Cliente " + clientId +" solicitou um táxi...");
+		System.out.println("Cliente " + clientId +" solicitou um táxi.Aguardando...");
 		
 		Race4Json resp = new Race4Json();		
 		Client client = db.findClientById(clientId);

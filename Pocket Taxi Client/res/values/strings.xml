@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Poket Taxi Client</string>
+    <string name="taxi_not_found">Nenhum táxi respondeu.</string>
+    <string name="user_not_registered">Usuário não cadastrado.</string>
 </resources>

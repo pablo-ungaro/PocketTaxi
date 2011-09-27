@@ -32,9 +32,9 @@ import br.com.pockettaxi.http.HttpClientImpl;
 import br.com.pockettaxi.http.JsonUtil;
 import br.com.pockettaxi.model.Client;
 import br.com.pockettaxi.model.Taxi;
+import br.com.pockettaxi.utils.Util;
 
 public class TaxiRequestActivity extends Activity {
-	private ProgressDialog loading;
 	private Handler handler = new Handler();
 
 	@Override
@@ -48,44 +48,33 @@ public class TaxiRequestActivity extends Activity {
 		final Button button = (Button) findViewById(R.id.button);
 		
 		button.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				TaxiRequestActivity.this.loading = ProgressDialog
-						.show(TaxiRequestActivity.this,
-								"Localizando táxi",
-								"Por favor aguarde enquanto estamos localizando o seu táxi.",
-								true, true);
-				try {
-					findTaxi();
-				} catch (IOException e) {
-					Log.e(CATEGORIA, e.getMessage(),e);
-				}			
+			public void onClick(View v) {			
+				findTaxi();						
 			}
 		});
 	}
 
-	private void findTaxi() throws IOException {
-		final Location myActualPosition = getMyCurrentLocation();
-		Geocoder geocoder = new Geocoder(TaxiRequestActivity.this, Locale.getDefault());
-		final Address address = geocoder.getFromLocation(myActualPosition.getLatitude(), myActualPosition.getLongitude(), 1).get(0);
-		final Map<Object,Object> parameters = new HashMap<Object, Object>();
-		
-		parameters.put("latitude", myActualPosition.getLatitude());
-		parameters.put("longitude", myActualPosition.getLongitude());
-		parameters.put("address", createAddress(address));
-		
+	private void findTaxi(){		
 		new Thread(new Runnable() {
-
+			ProgressDialog loading = ProgressDialog.show(TaxiRequestActivity.this,
+					"Localizando táxi","Por favor aguarde enquanto estamos localizando o seu táxi.",true, true);
 			@Override
 			public void run() {
-				try {
+				try {					
+					Location myActualPosition = getMyCurrentLocation();
+					Geocoder geocoder = new Geocoder(TaxiRequestActivity.this, Locale.getDefault());
+					Map<Object,Object> parameters = new HashMap<Object, Object>();
+					Address address = geocoder.getFromLocation(myActualPosition.getLatitude(), myActualPosition.getLongitude(), 1).get(0);
+	
+					parameters.put("latitude", myActualPosition.getLatitude());
+					parameters.put("longitude", myActualPosition.getLongitude());
+					parameters.put("address", createAddress(address));
+					
 					HttpClientImpl http = new HttpClientImpl(getUrlRequest(1L));
 					JSONObject resp = http.doGet(parameters);
-
-					Taxi taxi = JsonUtil.jsonToTaxi(resp);
-					Client client = JsonUtil.jsonToClient(resp);
 					
-					openMapWithTaxiLocation(taxi,client);
-					
+					processResponse(resp);
+		
 				} catch (IllegalStateException e) {
 					Log.e(CATEGORIA, e.getMessage(),e);
 				} catch (IOException e) {
@@ -102,6 +91,23 @@ public class TaxiRequestActivity extends Activity {
 		}).start();
 	}
 
+	private void processResponse(JSONObject resp) throws JSONException {
+		switch(JsonUtil.jsonToStatusCode(resp)){
+		 case OK:
+				Taxi taxi = JsonUtil.jsonToTaxi(resp);
+				Client client = JsonUtil.jsonToClient(resp);
+				
+				openMapWithTaxiLocation(taxi,client);	
+			 break;
+		 case INVALID_USER:
+			 	Util.showSimpleDialog(TaxiRequestActivity.this,handler,R.string.user_not_registered);
+			 break;
+		 case TAXI_NOT_FOUND:
+			 	Util.showSimpleDialog(TaxiRequestActivity.this,handler,R.string.taxi_not_found);
+			 break;
+		}		
+	}
+	
 	private String createAddress(Address address) {
 		return address.getAddressLine(0).concat(", "+address.getAddressLine(1));
 	}
