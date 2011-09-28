@@ -5,6 +5,10 @@
     android:layout_height="fill_parent"
     android:background="@drawable/bg">
     
-
+	  <Button android:id="@+id/btnStartService"
+	  			android:text="@string/txt_start_service"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="center"/>
 </FrameLayout>
 

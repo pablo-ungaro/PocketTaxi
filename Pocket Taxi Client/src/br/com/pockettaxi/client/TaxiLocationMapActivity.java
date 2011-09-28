@@ -54,12 +54,12 @@ public class TaxiLocationMapActivity extends MapActivity {
 		taxi = (Taxi) bundle.get("taxi");
 		client = (Client) bundle.get("client");
 		clientLocation = new Position(client.getLatitude(),client.getLongitude());
-		iconTaxista = getResources().getDrawable(	R.drawable.icon_taxista);
-		iconClient = getResources().getDrawable(	R.drawable.icon_cliente);
+		iconTaxista = getResources().getDrawable(R.drawable.icon_taxista);
+		iconClient = getResources().getDrawable(R.drawable.icon_cliente);
 	}
 
 	private void setAndInitializeMap() {
-		map = new MapView(this, "0PJEwP5On_eCCZ0HaNwxjXknV8fqOTraG4NDz5A");
+		map = new MapView(this, "0PJEwP5On_eASpW549v8Ft0VPpZCJI1dGzx89NA");
 		
 		map.setClickable(true);
 		map.setBuiltInZoomControls(true);
@@ -119,12 +119,11 @@ public class TaxiLocationMapActivity extends MapActivity {
 			return new Position(taxi.getLatitude(),taxi.getLongitude());
 		} catch (JSONException e) {
 			Log.e(CATEGORIA, e.getMessage(),e);
-			showMessage(this,handler, "Erro ao tentar atualizar localização do taxista.", Toast.LENGTH_LONG);
 		} catch (IllegalStateException e) {
 			Log.e(CATEGORIA, e.getMessage(),e);
 		} catch (IOException e) {
 			Log.e(CATEGORIA, e.getMessage(),e);
-			showMessage(this,handler,"Não foi possível conectar com o servidor.",Toast.LENGTH_LONG);					
+			showMessage(this,handler,getString(R.string.connect_server),Toast.LENGTH_LONG);					
 		} catch (URISyntaxException e) {
 			Log.e(CATEGORIA, e.getMessage(),e);
 		}

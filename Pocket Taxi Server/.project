@@ -37,7 +37,7 @@
 		<link>
 			<name>shared</name>
 			<type>2</type>
-			<location>C:/Users/pablo.ungaro/workspace/PocketTaxi/shared</location>
+			<location>/home/pablo/Programas/workspace/PocketTaxi/shared</location>
 		</link>
 	</linkedResources>
 </projectDescription>

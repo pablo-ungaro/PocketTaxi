@@ -2,7 +2,7 @@ package br.com.pockettaxi.client;
 
 import static br.com.pockettaxi.utils.Constants.CATEGORIA;
 import static br.com.pockettaxi.utils.Util.getUrlRequest;
-import static br.com.pockettaxi.utils.Util.showMessage;
+
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -57,17 +57,17 @@ public class TaxiRequestActivity extends Activity {
 	private void findTaxi(){		
 		new Thread(new Runnable() {
 			ProgressDialog loading = ProgressDialog.show(TaxiRequestActivity.this,
-					"Localizando táxi","Por favor aguarde enquanto estamos localizando o seu táxi.",true, true);
+					getString(R.string.title_pdialog_locate_taxi),getString(R.string.message_pdialog_locate_taxi),true, false);
 			@Override
 			public void run() {
 				try {					
-					Location myActualPosition = getMyCurrentLocation();
+					Location myCurrentPosition = getMyCurrentLocation();
 					Geocoder geocoder = new Geocoder(TaxiRequestActivity.this, Locale.getDefault());
 					Map<Object,Object> parameters = new HashMap<Object, Object>();
-					Address address = geocoder.getFromLocation(myActualPosition.getLatitude(), myActualPosition.getLongitude(), 1).get(0);
+					Address address = geocoder.getFromLocation(myCurrentPosition.getLatitude(), myCurrentPosition.getLongitude(), 1).get(0);
 	
-					parameters.put("latitude", myActualPosition.getLatitude());
-					parameters.put("longitude", myActualPosition.getLongitude());
+					parameters.put("latitude", myCurrentPosition.getLatitude());
+					parameters.put("longitude", myCurrentPosition.getLongitude());
 					parameters.put("address", createAddress(address));
 					
 					HttpClientImpl http = new HttpClientImpl(getUrlRequest(1L));
@@ -79,7 +79,7 @@ public class TaxiRequestActivity extends Activity {
 					Log.e(CATEGORIA, e.getMessage(),e);
 				} catch (IOException e) {
 					Log.e(CATEGORIA, e.getMessage(),e);
-					showMessage(TaxiRequestActivity.this,handler,"Não foi possível conectar com o servidor.",Toast.LENGTH_LONG);					
+					Util.showMessage(TaxiRequestActivity.this,handler,getString(R.string.connect_server),Toast.LENGTH_LONG);					
 				} catch (URISyntaxException e) {
 					Log.e(CATEGORIA, e.getMessage(),e);
 				} catch (JSONException e) {

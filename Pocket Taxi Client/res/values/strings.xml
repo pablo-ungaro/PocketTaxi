@@ -3,4 +3,6 @@
     <string name="app_name">Poket Taxi Client</string>
     <string name="taxi_not_found">Nenhum táxi respondeu.</string>
     <string name="user_not_registered">Usuário não cadastrado.</string>
+    <string name="title_pdialog_locate_taxi">Localizando táxi</string>
+    <string name="message_pdialog_locate_taxi">Por favor aguarde enquanto estamos localizando o seu táxi.</string>
 </resources>

@@ -3,13 +3,17 @@ package br.com.pockettaxi.utils;
 import static br.com.pockettaxi.utils.Constants.HOST;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.widget.Toast;
 
 public class Util {
 	
 	public static void showMessage(final Context ctx,Handler handler,final String msg,final int duration){
-			handler.post(new Runnable() {
+	    handler.post(new Runnable() {
 			
 			@Override
 			public void run() {
@@ -19,7 +23,7 @@ public class Util {
 	}
 	
 	public static void showSimpleDialog(final Context ctx,Handler handler,final int message){
-			handler.post(new Runnable() {
+		handler.post(new Runnable() {
 			
 			@Override
 			public void run() {
@@ -35,8 +39,29 @@ public class Util {
 		.append("/request").toString();
 	}
 	
+	public static String getUrlHasClient(){
+		return new StringBuilder(HOST).append("/client")
+		.append("/has-client").toString();
+	}
+	
 	public static String getUrlCurrentPosionOfTaxi(Long taxiId){
 		return new StringBuilder(HOST).append("/taxi/").append(taxiId)
 		.append("/location").toString();
 	}
+	
+	public static String getUrlSendCurrentPosionOfTaxi(Long taxiId){
+		return new StringBuilder(HOST).append("/taxi/").append(taxiId)
+		.append("/set-location").toString();
+	}
+	
+	   public static void playNotificationSound(Context context) {
+	       Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+	       if (uri != null) {
+	           Ringtone rt = RingtoneManager.getRingtone(context, uri);
+	           if (rt != null) {
+	               rt.setStreamType(AudioManager.STREAM_NOTIFICATION);
+	               rt.play();
+	           }
+	       }
+	   }
 }
