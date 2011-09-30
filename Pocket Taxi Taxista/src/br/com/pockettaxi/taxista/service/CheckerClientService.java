@@ -18,19 +18,24 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 import br.com.pockettaxi.http.HttpClientImpl;
 import br.com.pockettaxi.http.JsonUtil;
 import br.com.pockettaxi.model.Client;
 import br.com.pockettaxi.taxista.R;
 import br.com.pockettaxi.taxista.ui.HomeActivity;
+import br.com.pockettaxi.taxista.ui.NewClientActivity;
 import br.com.pockettaxi.utils.Util;
 
 public class CheckerClientService extends Service {
 	private Handler handler = new Handler();
-
+	private boolean isActive = false;
+	
 	@Override
 	public void onCreate() {
-		super.onCreate();
+		isActive = true;
+        showNotification();
+
 		handler.postDelayed(new Runnable() {
 
 			@Override
@@ -41,21 +46,20 @@ public class CheckerClientService extends Service {
 					Log.e(CATEGORIA, e.getMessage(), e);
 				} catch (IOException e) {
 					Log.e(CATEGORIA, e.getMessage(), e);
+					Util.showMessage(CheckerClientService.this,handler,getString(R.string.connect_server),Toast.LENGTH_LONG);					
 				} catch (URISyntaxException e) {
 					Log.e(CATEGORIA, e.getMessage(), e);
 				} catch (JSONException e) {
 					Log.e(CATEGORIA, e.getMessage(), e);
 				}
-				handler.postDelayed(this, POLLING);
+				if(isActive)handler.postDelayed(this, POLLING);
 			}
 
 		}, POLLING);
 	}
 
-	private void checkIfHasClient() throws IllegalStateException, IOException,
-			URISyntaxException, JSONException {
-		HttpClientImpl http = new HttpClientImpl(
-				Util.getUrlSendCurrentPosionOfTaxi(1L));
+	private void checkIfHasClient() throws IllegalStateException, IOException,URISyntaxException, JSONException {
+		HttpClientImpl http = new HttpClientImpl(Util.getUrlHasClient());
 		JSONObject resp = http.doGet(null);
 
 		processResponse(resp);
@@ -63,35 +67,64 @@ public class CheckerClientService extends Service {
 
 	private void processResponse(JSONObject resp) throws JSONException {
 		switch (JsonUtil.jsonToStatusCode(resp)) {
-		case OK:
-			Client client = JsonUtil.jsonToClient(resp);
-			showNotification();
-			break;
-
-		case QUEUE_EMPTY:
-			Log.e(CATEGORIA, "Nenhum cliente na fila");
-			break;
+			case OK:
+					Client client = JsonUtil.jsonToClient(resp);
+					Log.i(CATEGORIA, client.getName() + " é o primeiro da fila.");
+					Intent newClientActivty = new Intent(this,NewClientActivity.class);
+					newClientActivty.putExtra("client", client);
+					showNewClientNotification(client,newClientActivty);
+				break;
+	
+			case QUEUE_EMPTY:
+					Log.i(CATEGORIA, "Nenhum cliente na fila");
+					NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+					nm.cancel(R.string.notification_new_client_id);
+				break;
 		}
+	}
+
+	private void showNewClientNotification(Client client, Intent intent ) {
+		int icon = R.drawable.smile;
+		long when = System.currentTimeMillis();
+		PendingIntent p = PendingIntent.getActivity(this, 0, intent, 0);
+
+		Notification notification = new Notification(icon,getString(R.string.new_client), when);
+		notification.setLatestEventInfo(CheckerClientService.this, client.getName(),client.getAddress(),p);
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		notification.defaults |= Notification.DEFAULT_VIBRATE;
+		
+		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		nm.notify(R.string.notification_new_client_id, notification);	
 	}
 
 	public void showNotification() {
 		int icon = R.drawable.smile;
 		long when = System.currentTimeMillis();
+		String messageBar = getString(R.string.service_checker_client_msg);
+		String title = getString(R.string.notification_title);
+		String message = messageBar;
+		
 		PendingIntent p = PendingIntent.getActivity(this, 0, new Intent(this,HomeActivity.class), 0);
 
-		Notification notification = new Notification(icon, "testebar", when);
-		notification.setLatestEventInfo(CheckerClientService.this, "title",	"msg",p);
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		Notification notification = new Notification(icon, messageBar, when);
+		notification.setLatestEventInfo(CheckerClientService.this, title, message,p);
+		notification.flags |= Notification.FLAG_ONGOING_EVENT;
 
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		nm.notify(0, notification);
-
-		Util.playNotificationSound(this);
+		nm.notify(R.string.notification_checker_id, notification);
 	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
-
+	
+	@Override
+	public void onDestroy() {
+		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		nm.cancel(R.string.notification_new_client_id);
+		nm.cancel(R.string.notification_checker_id);
+		isActive = false;
+	}
+	
 }

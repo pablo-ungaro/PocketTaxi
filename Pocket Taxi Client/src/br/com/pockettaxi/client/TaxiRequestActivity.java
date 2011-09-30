@@ -57,7 +57,7 @@ public class TaxiRequestActivity extends Activity {
 	private void findTaxi(){		
 		new Thread(new Runnable() {
 			ProgressDialog loading = ProgressDialog.show(TaxiRequestActivity.this,
-					getString(R.string.title_pdialog_locate_taxi),getString(R.string.message_pdialog_locate_taxi),true, false);
+					null,getString(R.string.message_pdialog_locate_taxi),true, false);
 			@Override
 			public void run() {
 				try {					

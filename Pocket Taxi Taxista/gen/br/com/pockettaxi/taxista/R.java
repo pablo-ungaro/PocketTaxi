@@ -16,13 +16,32 @@ public final class R {
         public static final int smile=0x7f020002;
     }
     public static final class id {
-        public static final int btnStartService=0x7f050000;
+        public static final int btnStartService=0x7f050004;
+        public static final int dialog_layout_root=0x7f050002;
+        public static final int layout_root=0x7f050000;
+        public static final int login=0x7f050003;
+        public static final int txtDialog=0x7f050001;
     }
     public static final class layout {
-        public static final int main=0x7f030000;
+        public static final int custom_dialog_layout=0x7f030000;
+        public static final int dialog_layout_root=0x7f030001;
+        public static final int main=0x7f030002;
+        public static final int new_client=0x7f030003;
     }
     public static final class string {
-        public static final int app_name=0x7f040000;
-        public static final int txt_start_service=0x7f040001;
+        public static final int app_name=0x7f040001;
+        public static final int connect_server=0x7f040000;
+        public static final int dialog_text=0x7f04000b;
+        public static final int new_client=0x7f040006;
+        public static final int no=0x7f04000a;
+        public static final int notification_checker_id=0x7f040007;
+        public static final int notification_new_client_id=0x7f040008;
+        public static final int notification_title=0x7f040003;
+        public static final int service_checker_client_msg=0x7f040004;
+        public static final int service_current_position_msg=0x7f040005;
+        public static final int to_later=0x7f04000c;
+        public static final int txt_start_service=0x7f040002;
+        public static final int watermark=0x7f04000d;
+        public static final int yes=0x7f040009;
     }
 }

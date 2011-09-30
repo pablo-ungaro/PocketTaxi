@@ -2,4 +2,15 @@
 <resources>
     <string name="app_name">Poket Taxi Taxista</string>
     <string name="txt_start_service">Aguardar cliente</string>
+    <string name="notification_title">Pocket Táxi</string>
+    <string name="service_checker_client_msg">Verificação de cliente em andamento</string>  
+    <string name="service_current_position_msg">Atualização de posição em andamento</string>  
+    <string name="new_client">Novo Cliente</string>  
+    <string name="notification_checker_id">1</string>   
+    <string name="notification_new_client_id">2</string>   
+    <string name="yes">Sim</string> 
+    <string name="no">Não</string>  
+    <string name="dialog_text">O cliente %1$s solicitou um táxi no endereço: %2$s. Deseja aceitar?</string>
+    <string name="to_later">Outro táxi aceitou a corrida.</string>
+    <string name="watermark">Login</string>   
 </resources>

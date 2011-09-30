@@ -27,7 +27,7 @@ public class JsonUtil {
         JSONObject clientJson = json.getJSONObject("client");
         Client client = new Client();
         client.setId(clientJson.getLong("id"));
-        client.setName(clientJson.getString("name"));
+        client.setName(clientJson.getString("name"));       
         client.setLatitude(clientJson.getDouble("latitude"));
         client.setLongitude(clientJson.getDouble("longitude"));
         client.setAddress(clientJson.getString("address"));

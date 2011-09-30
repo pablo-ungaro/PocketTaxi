@@ -34,6 +34,11 @@ public class Util {
 		});
 	}
 	
+	public static String getUrlAcceptClient(Long taxiId,Long clientId){
+		return new StringBuilder(HOST).append("/taxi/").append(taxiId)
+		.append("accept").append("/client/").append(clientId).toString();
+	}
+	
 	public static String getUrlRequest(Long clientId){
 		return new StringBuilder(HOST).append("/client/").append(clientId)
 		.append("/request").toString();
