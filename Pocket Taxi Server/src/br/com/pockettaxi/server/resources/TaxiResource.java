@@ -14,6 +14,7 @@ import br.com.pockettaxi.model.Client;
 import br.com.pockettaxi.model.StatusCode;
 import br.com.pockettaxi.model.Taxi;
 import br.com.pockettaxi.server.model.Queue;
+import br.com.pockettaxi.server.model.Race4Json;
 import br.com.pockettaxi.server.model.Taxi4Json;
 
 import com.sun.jersey.spi.resource.Singleton;
@@ -26,20 +27,24 @@ public class TaxiResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{taxiId}/accept/client/{clientId}")
-	public String acceptRace(@PathParam("taxiId") Long taxiId,@PathParam("clientId") Long clientId) {
+	public Race4Json acceptRace(@PathParam("taxiId") Long taxiId,@PathParam("clientId") Long clientId) {
 		System.out.println("accept -> Taxista aceitou a corrida");
 
 		Taxi taxi = db.findTaxiById(taxiId);
 		Client client = db.findClientById(clientId);
+		Race4Json resp = new Race4Json();		
 		
 		if((!Queue.clients.isEmpty()) && 
 				(Queue.clients.contains(client)) && 
 					(Queue.clients.peek().getId().equals(clientId)) ){
 			Queue.taxis.add(taxi);//Add um táxi na fila
-			return StatusCode.OK.toString();
+			resp.setStatusCode(StatusCode.OK);
+			resp.setMessage("Corrida iniciada");
+			return resp;
 		}
-
-		return StatusCode.TO_LATER.toString();
+		resp.setStatusCode(StatusCode.TO_LATER);
+		resp.setMessage("Outro táxi já pegou o cliente");
+		return resp;
 	}
 	
 	@GET

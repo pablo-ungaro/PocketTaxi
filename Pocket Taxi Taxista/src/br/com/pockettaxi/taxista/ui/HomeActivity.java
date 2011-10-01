@@ -7,21 +7,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import br.com.pockettaxi.taxista.R;
+import static br.com.pockettaxi.utils.Constants.*;
 
 public class HomeActivity extends Activity { 
-    public static final String PREFS_NAME = "loginData";
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-        //Seta o login se é a primeira vez
-        SharedPreferences prefs = getSharedPreferences(PREFS_NAME,0);
-        if (prefs.getLong("login", -1) < 0) {
-            startActivity(new Intent(this, SetupLoginActivity.class));
-        }
 		
 		setContentView(R.layout.main);
 		
@@ -30,6 +24,11 @@ public class HomeActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				EditText input = (EditText)findViewById(R.id.login);
+				SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+			    SharedPreferences.Editor editor = settings.edit();
+			    editor.putLong("login", Long.parseLong(input.getText().toString()));
+			    editor.commit();
 				startService(new Intent("CHECKER_CLIENT_SERVICE"));
 			}
 		});

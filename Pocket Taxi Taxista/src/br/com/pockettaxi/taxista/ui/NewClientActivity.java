@@ -1,6 +1,6 @@
 package br.com.pockettaxi.taxista.ui;
 
-import static br.com.pockettaxi.utils.Constants.CATEGORIA;
+import static br.com.pockettaxi.utils.Constants.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import br.com.pockettaxi.http.HttpClientImpl;
 import br.com.pockettaxi.http.JsonUtil;
 import br.com.pockettaxi.model.Client;
@@ -55,17 +57,14 @@ public class NewClientActivity extends Activity{
 				try {
 					acceptClient(client);
 				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.e(CATEGORIA, e.getMessage(), e);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.e(CATEGORIA, e.getMessage(), e);
+					Util.showMessage(NewClientActivity.this,handler,getString(R.string.connect_server),Toast.LENGTH_LONG);					
 				} catch (URISyntaxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.e(CATEGORIA, e.getMessage(), e);
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.e(CATEGORIA, e.getMessage(), e);
 				}
 			}
 		})
@@ -81,7 +80,8 @@ public class NewClientActivity extends Activity{
 	}
 	
 	private void acceptClient(Client client) throws IllegalStateException, IOException, URISyntaxException, JSONException{
-		HttpClientImpl http = new HttpClientImpl(Util.getUrlAcceptClient(1l,client.getId()));
+	    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		HttpClientImpl http = new HttpClientImpl(Util.getUrlAcceptClient(settings.getLong("login", -1),client.getId()));
 		JSONObject resp = http.doGet(null);
 
 		processResponse(resp,client);
