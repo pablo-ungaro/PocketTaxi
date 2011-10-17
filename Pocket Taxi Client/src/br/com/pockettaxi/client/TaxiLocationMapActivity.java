@@ -59,7 +59,7 @@ public class TaxiLocationMapActivity extends MapActivity {
 	}
 
 	private void setAndInitializeMap() {
-		map = new MapView(this, "0PJEwP5On_eASpW549v8Ft0VPpZCJI1dGzx89NA");
+		map = new MapView(this, "0PJEwP5On_eCCZ0HaNwxjXknV8fqOTraG4NDz5A");
 		
 		map.setClickable(true);
 		map.setBuiltInZoomControls(true);

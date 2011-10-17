@@ -4,15 +4,20 @@ import static br.com.pockettaxi.utils.Constants.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,7 +60,7 @@ public class NewClientActivity extends Activity{
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
 				try {
-					acceptClient(client);
+					accept(client);
 				} catch (IllegalStateException e) {
 					Log.e(CATEGORIA, e.getMessage(), e);
 				} catch (IOException e) {
@@ -79,10 +84,15 @@ public class NewClientActivity extends Activity{
 		.show();	
 	}
 	
-	private void acceptClient(Client client) throws IllegalStateException, IOException, URISyntaxException, JSONException{
+	private void accept(Client client) throws IllegalStateException, IOException, URISyntaxException, JSONException{
 	    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		Location myCurrentPosition = getMyCurrentLocation();
+		Map<Object,Object> parameters = new HashMap<Object, Object>();
+		parameters.put("latitude", myCurrentPosition.getLatitude());
+		parameters.put("longitude", myCurrentPosition.getLongitude());		
 		HttpClientImpl http = new HttpClientImpl(Util.getUrlAcceptClient(settings.getLong("login", -1),client.getId()));
-		JSONObject resp = http.doGet(null);
+		
+		JSONObject resp = http.doGet(parameters);
 
 		processResponse(resp,client);
 	}
@@ -105,5 +115,19 @@ public class NewClientActivity extends Activity{
 	private void openRouteNavigation(Double latitude, Double longitude) {
 		Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q="+latitude+ ","+longitude)); 
 		startActivity(i);	
+	}
+	
+	private Location getMyCurrentLocation() {
+		LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		Location currentLocation = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+		if (currentLocation == null) {
+			currentLocation = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			if(currentLocation == null){
+				currentLocation = new Location(LocationManager.GPS_PROVIDER);
+			}
+		}
+	
+		return currentLocation;
 	}
 }

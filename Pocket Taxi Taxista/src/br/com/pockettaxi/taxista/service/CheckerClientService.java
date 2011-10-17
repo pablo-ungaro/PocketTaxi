@@ -33,6 +33,7 @@ public class CheckerClientService extends Service {
 	
 	@Override
 	public void onCreate() {
+		stopService(new Intent("SET_CURRENT_POSITION_SERVICE"));
 		isActive = true;
         showNotification();
 

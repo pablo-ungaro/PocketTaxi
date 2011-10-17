@@ -4,4 +4,6 @@
     <string name="taxi_not_found">Nenhum táxi respondeu.</string>
     <string name="user_not_registered">Usuário não cadastrado.</string>
     <string name="message_pdialog_locate_taxi">Localizando táxi...</string>
+    <string name="watermark">Login</string> 
+    <string name="login_invalid">Login inválido</string>        
 </resources>

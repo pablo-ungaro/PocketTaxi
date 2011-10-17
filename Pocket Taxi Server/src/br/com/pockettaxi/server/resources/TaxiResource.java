@@ -27,10 +27,13 @@ public class TaxiResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{taxiId}/accept/client/{clientId}")
-	public Race4Json acceptRace(@PathParam("taxiId") Long taxiId,@PathParam("clientId") Long clientId) {
+	public Race4Json acceptRace(@PathParam("taxiId") Long taxiId,@PathParam("clientId") Long clientId,@QueryParam("latitude") Double latitude,
+			@QueryParam("longitude") Double longitude) {
 		System.out.println("accept -> Taxista aceitou a corrida");
 
 		Taxi taxi = db.findTaxiById(taxiId);
+		taxi.setLatitude(latitude);
+		taxi.setLongitude(longitude);
 		Client client = db.findClientById(clientId);
 		Race4Json resp = new Race4Json();		
 		
@@ -64,6 +67,8 @@ public class TaxiResource {
 												@QueryParam("longitude") Double longitude) {
 		
 		System.out.println("set-location - > Atualizando posição do taxista " + taxiId);
+		System.out.println("latitude -> " +latitude);
+		System.out.println("longitude -> " +longitude);
 		
 		db.findTaxiById(taxiId).setLatitude(latitude);
 		db.findTaxiById(taxiId).setLongitude(longitude);

@@ -1,8 +1,8 @@
 package br.com.pockettaxi.client;
 
 import static br.com.pockettaxi.utils.Constants.CATEGORIA;
+import static br.com.pockettaxi.utils.Constants.PREFS_NAME;
 import static br.com.pockettaxi.utils.Util.getUrlRequest;
-
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -27,6 +28,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 import br.com.pockettaxi.http.HttpClientImpl;
 import br.com.pockettaxi.http.JsonUtil;
@@ -48,13 +50,33 @@ public class TaxiRequestActivity extends Activity {
 		final Button button = (Button) findViewById(R.id.button);
 		
 		button.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {			
-				findTaxi();						
+			public void onClick(View v) {
+				EditText input = (EditText)findViewById(R.id.login);
+				String login = input.getText().toString();
+				if(loginIsValid(login)){
+					SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+				    SharedPreferences.Editor editor = settings.edit();
+				    editor.putLong("login", Long.parseLong(login));
+				    editor.commit();
+					findTaxi(Long.parseLong(input.getText().toString()));	
+				}else{
+				 	Util.showSimpleDialog(TaxiRequestActivity.this,handler,R.string.login_invalid);
+				}
 			}
 		});
 	}
+	
 
-	private void findTaxi(){		
+	private boolean loginIsValid(String login) {
+		try{
+			Long.parseLong(login);
+			return true;
+		}catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
+	private void findTaxi(final Long cliendId){		
 		new Thread(new Runnable() {
 			ProgressDialog loading = ProgressDialog.show(TaxiRequestActivity.this,
 					null,getString(R.string.message_pdialog_locate_taxi),true, false);
@@ -70,7 +92,7 @@ public class TaxiRequestActivity extends Activity {
 					parameters.put("longitude", myCurrentPosition.getLongitude());
 					parameters.put("address", createAddress(address));
 					
-					HttpClientImpl http = new HttpClientImpl(getUrlRequest(1L));
+					HttpClientImpl http = new HttpClientImpl(getUrlRequest(cliendId));
 					JSONObject resp = http.doGet(parameters);
 					
 					processResponse(resp);
@@ -122,7 +144,7 @@ public class TaxiRequestActivity extends Activity {
 				currentLocation = new Location(LocationManager.GPS_PROVIDER);
 			}
 		}
-	
+		
 		return currentLocation;
 	}
 

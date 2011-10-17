@@ -76,7 +76,7 @@ public class ClientResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/has-client")
 	public Client4Json getClientInQueue() {
-		System.out.println("has-client -> Enviando informações do cliente para o taxista");
+		System.out.println("has-client -> Verificando cliente na fila");
 		
 		Client4Json resp = new Client4Json();
 		Client first = Queue.clients.peek();

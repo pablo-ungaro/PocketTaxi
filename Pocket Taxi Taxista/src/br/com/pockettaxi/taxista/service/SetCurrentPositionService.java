@@ -34,6 +34,7 @@ public class SetCurrentPositionService extends Service {
 	private boolean isActive = false;
 	@Override
 	public void onCreate() {
+		stopService(new Intent("CHECKER_CLIENT_SERVICE"));
 		isActive = true;
         showNotification();
 

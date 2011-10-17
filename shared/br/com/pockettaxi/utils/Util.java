@@ -59,14 +59,16 @@ public class Util {
 		.append("/set-location").toString();
 	}
 	
-	   public static void playNotificationSound(Context context) {
-	       Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-	       if (uri != null) {
-	           Ringtone rt = RingtoneManager.getRingtone(context, uri);
-	           if (rt != null) {
-	               rt.setStreamType(AudioManager.STREAM_NOTIFICATION);
-	               rt.play();
-	           }
-	       }
-	   }
+	public static void playNotificationSound(Context context) {
+		Uri uri = RingtoneManager
+				.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		if (uri != null) {
+			Ringtone rt = RingtoneManager.getRingtone(context, uri);
+			if (rt != null) {
+				rt.setStreamType(AudioManager.STREAM_NOTIFICATION);
+				rt.play();
+			}
+		}
+	}  
+	   
 }
