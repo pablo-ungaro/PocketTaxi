@@ -10,7 +10,7 @@
 			      android:layout_height="fill_parent"
 				      android:gravity="center">
 	    <EditText android:id="@+id/login"
-	    		  android:hint="@string/watermark"
+	    		  android:hint="@string/login_watermark"
 			      android:layout_width="wrap_content"
 			      android:layout_height="wrap_content"
 			      android:inputType="number"/>

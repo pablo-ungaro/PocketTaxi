@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/7/trunk/android-ui-patterns/res/drawable-ldpi
+END
+dashboard_button.png
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/7/trunk/android-ui-patterns/res/drawable-ldpi/dashboard_button.png
+END
+title_logo_default.png
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/7/trunk/android-ui-patterns/res/drawable-ldpi/title_logo_default.png
+END
+title_logo_pressed.png
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/7/trunk/android-ui-patterns/res/drawable-ldpi/title_logo_pressed.png
+END
+icon.png
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/7/trunk/android-ui-patterns/res/drawable-ldpi/icon.png
+END
+title_logo_selected.png
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/7/trunk/android-ui-patterns/res/drawable-ldpi/title_logo_selected.png
+END
+dashboard_button_selected.png
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/7/trunk/android-ui-patterns/res/drawable-ldpi/dashboard_button_selected.png
+END
+dashboard_button_focused.png
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/7/trunk/android-ui-patterns/res/drawable-ldpi/dashboard_button_focused.png
+END

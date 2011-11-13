@@ -1,8 +1,10 @@
 package br.com.pockettaxi.client;
 
-import static br.com.pockettaxi.utils.Constants.*;
+import static br.com.pockettaxi.utils.Constants.CATEGORIA;
+import static br.com.pockettaxi.utils.Constants.POLLING;
 import static br.com.pockettaxi.utils.Util.getUrlCurrentPosionOfTaxi;
 import static br.com.pockettaxi.utils.Util.showMessage;
+import greendroid.app.GDMapActivity;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -23,12 +25,11 @@ import br.com.pockettaxi.utils.ImagensOverlay;
 import br.com.pockettaxi.utils.Position;
 
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 
-public class TaxiLocationMapActivity extends MapActivity {
+public class TaxiLocationMapActivity extends GDMapActivity {
 	private Handler handler = new Handler();
 	private boolean fimHandler = false;
 	private boolean isFocused =false;
