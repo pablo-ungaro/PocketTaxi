@@ -3,7 +3,8 @@
     android:id="@+id/lg_custom"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:padding="@dimen/dialog_pad">
 
 
     <LinearLayout
@@ -22,7 +23,8 @@
             android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight=".20" >
+            android:layout_weight=".20" 
+            android:inputType="number">
 
             <requestFocus />
         </EditText>
@@ -44,7 +46,8 @@
             android:id="@+id/senha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight=".20" />
+            android:layout_weight=".20" 
+            android:inputType="textPassword"/>
     </LinearLayout>
 
 

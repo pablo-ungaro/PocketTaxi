@@ -3,10 +3,6 @@ package br.com.pockettaxi.client;
 import static br.com.pockettaxi.utils.Constants.CATEGORIA;
 import static br.com.pockettaxi.utils.Constants.PREFS_NAME;
 import static br.com.pockettaxi.utils.Util.getUrlRequest;
-import greendroid.app.GDActivity;
-import greendroid.graphics.drawable.ActionBarDrawable;
-import greendroid.widget.ActionBarItem;
-import greendroid.widget.NormalActionBarItem;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -17,6 +13,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -32,12 +29,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 import br.com.pockettaxi.http.HttpClientImpl;
 import br.com.pockettaxi.http.JsonUtil;
@@ -45,40 +38,54 @@ import br.com.pockettaxi.model.Client;
 import br.com.pockettaxi.model.Taxi;
 import br.com.pockettaxi.utils.Util;
 
-public class TaxiRequestActivity extends GDActivity {
+public class TaxiRequestActivity extends Activity {
 	private Handler handler = new Handler();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		 addActionBarItem(getActionBar()
-	                .newActionBarItem(NormalActionBarItem.class)
-	                .setDrawable(new ActionBarDrawable(this, R.drawable.ic_action_bar_info)), R.id.action_bar_view_info);
-
-		addContentView(LayoutInflater.from(this).inflate(R.layout.dashboard, new FrameLayout(this)), new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
-		 //bind();
-	}
-
-	private void bind() {
-		final Button button = (Button) findViewById(R.id.button);
-		
-		button.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				EditText input = (EditText)findViewById(R.id.login);
-				String login = input.getText().toString();
-				if(loginIsValid(login)){
-					SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-				    SharedPreferences.Editor editor = settings.edit();
-				    editor.putLong("login", Long.parseLong(login));
-				    editor.commit();
-					findTaxi(Long.parseLong(input.getText().toString()));	
-				}else{
-				 	Util.showSimpleDialog(TaxiRequestActivity.this,handler,R.string.login_invalid);
-				}
-			}
-		});
+		setContentView(R.layout.home);
 	}
 	
+    public void showLogin(View v) {
+    	LayoutInflater inflater = getLayoutInflater();
+		final View customDialogView = inflater.inflate(R.layout.login_custom_dialog,
+		                               (ViewGroup) findViewById(R.id.lg_custom));
+		
+		new AlertDialog.Builder(this)
+		.setView(customDialogView)
+		.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				EditText input = (EditText) customDialogView.findViewById(R.id.login);
+				login(input.getText().toString());
+			}
+		})
+		.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int arg1) {
+				dialog.dismiss();
+			}
+		})
+		.setTitle("Login")
+		.create()
+		.show();
+    }
+    
+    private void login(String login) {			
+		if(loginIsValid(login)){
+			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		    SharedPreferences.Editor editor = settings.edit();
+		    editor.putLong("login", Long.parseLong(login));
+		    editor.commit();
+			findTaxi(Long.parseLong(login));	
+		}else{
+		 	Util.showSimpleDialog(TaxiRequestActivity.this,handler,R.string.login_invalid);
+		}			
+	}
+		
 
 	private boolean loginIsValid(String login) {
 		try{
@@ -153,6 +160,7 @@ public class TaxiRequestActivity extends GDActivity {
 
 		if (currentLocation == null) {
 			currentLocation = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			Util.showMessage(TaxiRequestActivity.this,handler,"GPS desabilitado, obtendo localização pela rede.",Toast.LENGTH_LONG);					
 			if(currentLocation == null){
 				currentLocation = new Location(LocationManager.GPS_PROVIDER);
 			}
@@ -175,56 +183,4 @@ public class TaxiRequestActivity extends GDActivity {
 				}
 			});		
 	}
-
-	    @Override
-	    public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-	        switch (item.getItemId()) {
-	            case R.id.action_bar_view_info:
-	                startActivity(new Intent(this, InfoTabActivity.class));
-	                return true;
-
-	            default:
-	                return super.onHandleActionBarItemClick(item, position);
-	        }
-	    }
-	    
-	    public void onActionOneClick(View v) {
-	    	LayoutInflater inflater = getLayoutInflater();
-			final View customDialogView = inflater.inflate(R.layout.login_custom_dialog,
-			                               (ViewGroup) findViewById(R.id.lg_custom));
-			
-			new AlertDialog.Builder(this)
-			.setView(customDialogView)
-			.setPositiveButton("OK",new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface arg0, int arg1) {
-					EditText input = (EditText) customDialogView.findViewById(R.id.login);
-					login(input.getText().toString());
-				}
-			})
-			.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int arg1) {
-					dialog.dismiss();
-				}
-			})
-			.setTitle("Login")
-			.create()
-			.show();	
-	    }
-	    
-
-		private void login(String login) {			
-			if(loginIsValid(login)){
-				SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-			    SharedPreferences.Editor editor = settings.edit();
-			    editor.putLong("login", Long.parseLong(login));
-			    editor.commit();
-				findTaxi(Long.parseLong(login));	
-			}else{
-			 	Util.showSimpleDialog(TaxiRequestActivity.this,handler,R.string.login_invalid);
-			}			
-		}
 }

@@ -17,7 +17,7 @@ public class HomeActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.main);
+		setContentView(R.layout.home);
 		
 		Button btn = (Button)findViewById(R.id.btnStartService);
 		btn.setOnClickListener(new OnClickListener() {

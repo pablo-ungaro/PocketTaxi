@@ -1,10 +1,8 @@
 package br.com.pockettaxi.client;
 
-import static br.com.pockettaxi.utils.Constants.CATEGORIA;
-import static br.com.pockettaxi.utils.Constants.POLLING;
+import static br.com.pockettaxi.utils.Constants.*;
 import static br.com.pockettaxi.utils.Util.getUrlCurrentPosionOfTaxi;
 import static br.com.pockettaxi.utils.Util.showMessage;
-import greendroid.app.GDMapActivity;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -25,11 +23,12 @@ import br.com.pockettaxi.utils.ImagensOverlay;
 import br.com.pockettaxi.utils.Position;
 
 import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 
-public class TaxiLocationMapActivity extends GDMapActivity {
+public class TaxiLocationMapActivity extends MapActivity {
 	private Handler handler = new Handler();
 	private boolean fimHandler = false;
 	private boolean isFocused =false;
@@ -44,10 +43,10 @@ public class TaxiLocationMapActivity extends GDMapActivity {
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
+		setContentView(R.layout.map);
 		init();
 		setAndInitializeMap();
 		setUpdateView();
-		setContentView(map);
 	}
 	
 	private void init() {
@@ -60,9 +59,8 @@ public class TaxiLocationMapActivity extends GDMapActivity {
 	}
 
 	private void setAndInitializeMap() {
-		map = new MapView(this, "0PJEwP5On_eCCZ0HaNwxjXknV8fqOTraG4NDz5A");
-		
-		map.setClickable(true);
+		map = (MapView) findViewById(R.id.map_view);
+				
 		map.setBuiltInZoomControls(true);
 		map.setSatellite(false);
 		map.setStreetView(true);

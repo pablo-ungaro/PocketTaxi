@@ -44,7 +44,7 @@ public class NewClientActivity extends Activity{
 	}
 
 	private void showDialog() {
-		Bundle bundle = getIntent().getExtras();
+		Bundle bundle = NewClientActivity.this.getIntent().getExtras();
 		final Client client = (Client) bundle.get("client");
 		LayoutInflater inflater = getLayoutInflater();
 		View customDialogView = inflater.inflate(R.layout.custom_dialog_layout,
