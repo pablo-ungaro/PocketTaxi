@@ -17,13 +17,12 @@ public final class R {
         public static final int dialog_pad=0x7f050000;
     }
     public static final class drawable {
-        public static final int bg=0x7f020000;
+        public static final int finish=0x7f020000;
         public static final int icon=0x7f020001;
-        public static final int icon_cliente=0x7f020002;
-        public static final int icon_taxista=0x7f020003;
-        public static final int request_button=0x7f020004;
-        public static final int solicita_button=0x7f020005;
-        public static final int solicita_button_pressed=0x7f020006;
+        public static final int icon_taxi=0x7f020002;
+        public static final int request_button=0x7f020003;
+        public static final int solicita_button=0x7f020004;
+        public static final int solicita_button_pressed=0x7f020005;
     }
     public static final class id {
         public static final int gd_action_bar=0x7f070002;

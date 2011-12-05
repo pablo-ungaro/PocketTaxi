@@ -23,7 +23,6 @@ import br.com.pockettaxi.http.HttpClientImpl;
 import br.com.pockettaxi.http.JsonUtil;
 import br.com.pockettaxi.model.Client;
 import br.com.pockettaxi.taxista.R;
-import br.com.pockettaxi.taxista.ui.HomeActivity;
 import br.com.pockettaxi.taxista.ui.NewClientActivity;
 import br.com.pockettaxi.utils.Util;
 
@@ -32,8 +31,13 @@ public class CheckerClientService extends Service {
 	private boolean isActive = false;
 	
 	@Override
+	public void onStart(Intent intent, int startId) {
+		super.onStart(intent, startId);		
+	}
+	
+	@Override
 	public void onCreate() {
-		stopService(new Intent("SET_CURRENT_POSITION_SERVICE"));
+		stopService(new Intent("SET_CURRENT_POSITION_SERVICE"));		
 		isActive = true;
         showNotification();
 
@@ -47,7 +51,8 @@ public class CheckerClientService extends Service {
 					Log.e(CATEGORIA, e.getMessage(), e);
 				} catch (IOException e) {
 					Log.e(CATEGORIA, e.getMessage(), e);
-					Util.showMessage(CheckerClientService.this,handler,getString(R.string.connect_server),Toast.LENGTH_LONG);					
+					Util.showMessage(CheckerClientService.this,handler,getString(R.string.connect_server),Toast.LENGTH_LONG);
+					stopSelf();
 				} catch (URISyntaxException e) {
 					Log.e(CATEGORIA, e.getMessage(), e);
 				} catch (JSONException e) {
@@ -85,7 +90,7 @@ public class CheckerClientService extends Service {
 	}
 
 	private void showNewClientNotification(Client client, Intent intent ) {
-		int icon = R.drawable.smile;
+		int icon = R.drawable.new_client;
 		long when = System.currentTimeMillis();
 		PendingIntent p = PendingIntent.getActivity(this, 0, intent, 0);
 
@@ -99,13 +104,13 @@ public class CheckerClientService extends Service {
 	}
 
 	public void showNotification() {
-		int icon = R.drawable.smile;
+		int icon = R.drawable.icon_has_client;
 		long when = System.currentTimeMillis();
 		String messageBar = getString(R.string.service_checker_client_msg);
 		String title = getString(R.string.notification_title);
 		String message = messageBar;
 		
-		PendingIntent p = PendingIntent.getActivity(this, 0, new Intent(this,HomeActivity.class), 0);
+		PendingIntent p = PendingIntent.getActivity(this, 0, null, 0);
 
 		Notification notification = new Notification(icon, messageBar, when);
 		notification.setLatestEventInfo(CheckerClientService.this, title, message,p);

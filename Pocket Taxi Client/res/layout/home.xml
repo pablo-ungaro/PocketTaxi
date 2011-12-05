@@ -2,8 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@drawable/bg">
+    android:layout_height="fill_parent">
     
 	<LinearLayout android:orientation="horizontal"
     			  android:layout_width="fill_parent"
@@ -18,17 +17,5 @@
                 android:onClick="showLogin"
                 android:text="Solicitar Táxi"
                 style="@style/.request_button"/>
-	    
-<!-- 	    <EditText android:id="@+id/login" -->
-<!-- 	    		  android:hint="@string/watermark" -->
-<!-- 			      android:layout_width="wrap_content" -->
-<!-- 			      android:layout_height="wrap_content" -->
-<!-- 			      android:inputType="number"/> -->
-				      
-<!-- 		<Button android:id="@+id/button" -->
-<!-- 		        android:layout_width="wrap_content" -->
-<!-- 		        android:layout_height="wrap_content" -->
-<!-- 		        android:padding="10dp" -->
-<!-- 		        android:background="@layout/android_button"/> -->
 	</LinearLayout>
 </FrameLayout>

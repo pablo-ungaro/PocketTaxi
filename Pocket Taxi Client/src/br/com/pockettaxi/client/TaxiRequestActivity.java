@@ -75,7 +75,7 @@ public class TaxiRequestActivity extends Activity {
     }
     
     private void login(String login) {			
-		if(loginIsValid(login)){
+		if(Util.loginIsValid(login)){
 			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		    SharedPreferences.Editor editor = settings.edit();
 		    editor.putLong("login", Long.parseLong(login));
@@ -86,16 +86,6 @@ public class TaxiRequestActivity extends Activity {
 		}			
 	}
 		
-
-	private boolean loginIsValid(String login) {
-		try{
-			Long.parseLong(login);
-			return true;
-		}catch (NumberFormatException e) {
-			return false;
-		}
-	}
-
 	private void findTaxi(final Long cliendId){		
 		new Thread(new Runnable() {
 			ProgressDialog loading = ProgressDialog.show(TaxiRequestActivity.this,

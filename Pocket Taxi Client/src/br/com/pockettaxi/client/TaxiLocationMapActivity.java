@@ -54,8 +54,8 @@ public class TaxiLocationMapActivity extends MapActivity {
 		taxi = (Taxi) bundle.get("taxi");
 		client = (Client) bundle.get("client");
 		clientLocation = new Position(client.getLatitude(),client.getLongitude());
-		iconTaxista = getResources().getDrawable(R.drawable.icon_taxista);
-		iconClient = getResources().getDrawable(R.drawable.icon_cliente);
+		iconTaxista = getResources().getDrawable(R.drawable.icon_taxi);
+		iconClient = getResources().getDrawable(R.drawable.finish);
 	}
 
 	private void setAndInitializeMap() {
@@ -122,7 +122,8 @@ public class TaxiLocationMapActivity extends MapActivity {
 			Log.e(CATEGORIA, e.getMessage(),e);
 		} catch (IOException e) {
 			Log.e(CATEGORIA, e.getMessage(),e);
-			showMessage(this,handler,getString(R.string.connect_server),Toast.LENGTH_LONG);					
+			showMessage(this,handler,getString(R.string.connect_server),Toast.LENGTH_LONG);		
+			fimHandler = true;
 		} catch (URISyntaxException e) {
 			Log.e(CATEGORIA, e.getMessage(),e);
 		}

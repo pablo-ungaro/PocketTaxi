@@ -69,6 +69,16 @@ public class Util {
 				rt.play();
 			}
 		}
-	}  
+	} 
+	
+
+	public static boolean loginIsValid(String login) {
+		try{
+			Long.parseLong(login);
+			return true;
+		}catch (NumberFormatException e) {
+			return false;
+		}
+	}
 	   
 }

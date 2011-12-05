@@ -11,12 +11,6 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import br.com.pockettaxi.http.HttpClientImpl;
-import br.com.pockettaxi.model.StatusCode;
-import br.com.pockettaxi.taxista.R;
-import br.com.pockettaxi.taxista.ui.HomeActivity;
-import br.com.pockettaxi.utils.Util;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -28,6 +22,11 @@ import android.location.LocationManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
+import br.com.pockettaxi.http.HttpClientImpl;
+import br.com.pockettaxi.model.StatusCode;
+import br.com.pockettaxi.taxista.R;
+import br.com.pockettaxi.utils.Util;
 
 public class SetCurrentPositionService extends Service {
 	private Handler handler = new Handler();
@@ -48,6 +47,8 @@ public class SetCurrentPositionService extends Service {
 					Log.e(CATEGORIA, e.getMessage(), e);
 				} catch (IOException e) {
 					Log.e(CATEGORIA, e.getMessage(), e);
+					Util.showMessage(SetCurrentPositionService.this,handler,getString(R.string.connect_server),Toast.LENGTH_LONG);
+					stopSelf();
 				} catch (URISyntaxException e) {
 					Log.e(CATEGORIA, e.getMessage(), e);
 				} catch (JSONException e) {
@@ -92,13 +93,13 @@ public class SetCurrentPositionService extends Service {
 	}
 
 	public void showNotification() {
-		int icon = R.drawable.smile;
+		int icon = R.drawable.current_position;
 		long when = System.currentTimeMillis();
 		String messageBar = getString(R.string.service_current_position_msg);
 		String title = getString(R.string.notification_title);
 		String message = messageBar;
 		
-		PendingIntent p = PendingIntent.getActivity(this, 0, new Intent(this,HomeActivity.class), 0);
+		PendingIntent p = PendingIntent.getActivity(this, 0, null, 0);
 
 		Notification notification = new Notification(icon, messageBar, when);
 		notification.setLatestEventInfo(SetCurrentPositionService.this, title, message,p);
@@ -110,6 +111,8 @@ public class SetCurrentPositionService extends Service {
 	
 	@Override
 	public void onDestroy() {
+		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		nm.cancel(R.string.notification_checker_id);
 		isActive = false;
 	}
 }
