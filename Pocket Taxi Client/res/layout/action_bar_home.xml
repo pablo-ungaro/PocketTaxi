@@ -21,11 +21,11 @@
             android:background="@drawable/action_bar_divider" />
 
         <ImageButton
-            android:id="@+id/action_bar_item"
+            android:id="@+id/action_bar_locate"
             style="@style/gdActionBarItemStyle"
             android:layout_height="fill_parent"
             android:scaleType="center"
-            android:src="@drawable/action_bar_info" />
+            android:src="@drawable/action_bar_locate"/>
     </LinearLayout>
 
 </merge>

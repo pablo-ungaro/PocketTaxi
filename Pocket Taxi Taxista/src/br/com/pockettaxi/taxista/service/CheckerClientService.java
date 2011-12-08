@@ -97,8 +97,8 @@ public class CheckerClientService extends Service {
 		Notification notification = new Notification(icon,getString(R.string.new_client), when);
 		notification.setLatestEventInfo(CheckerClientService.this, client.getName(),client.getAddress(),p);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		notification.defaults |= Notification.DEFAULT_VIBRATE;
-		
+		notification.defaults |= Notification.DEFAULT_ALL;
+
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.notify(R.string.notification_new_client_id, notification);	
 	}

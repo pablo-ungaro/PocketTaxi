@@ -16,10 +16,11 @@
             android:id="@+id/solicita_taxi_btn"
             style="@style/.request_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="79dp"
             android:onClick="showLogin"
             android:text="Solicitar Táxi" />
-<!--             android:drawableTop="@drawable/request_button" -->
+
+        <!-- android:drawableTop="@drawable/request_button" -->
     </LinearLayout>
 
 </FrameLayout>
