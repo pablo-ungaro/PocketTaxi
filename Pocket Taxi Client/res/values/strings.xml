@@ -7,4 +7,5 @@
     <string name="watermark">Login</string> 
     <string name="login_invalid">Login inválido</string>        
     <string name="google_map_api_key_debug">0PJEwP5On_eASpW549v8Ft0VPpZCJI1dGzx89NA</string>
+    <string name="home">Dashboard</string>        
 </resources>

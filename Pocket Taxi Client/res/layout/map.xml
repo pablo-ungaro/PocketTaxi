@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.maps.MapView
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/map_view"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:clickable="true"	
-	android:apiKey="@string/google_map_api_key_debug"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/action_bar" />
+
+    <com.google.android.maps.MapView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/map_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:apiKey="@string/google_map_api_key_debug"
+        android:clickable="true" />
+
+</LinearLayout>

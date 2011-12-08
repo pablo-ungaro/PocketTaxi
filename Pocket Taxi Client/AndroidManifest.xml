@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="br.com.pockettaxi.client"
-      android:versionCode="1"
-      android:versionName="1.0">
+    package="br.com.pockettaxi.client"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
     <uses-sdk android:minSdkVersion="8" />
 
-    <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
-       <uses-library android:name="com.google.android.maps"/>
-        <activity android:name=".TaxiRequestActivity"  android:label="@string/app_name">
-            <intent-filter>
+    <application
+        android:debuggable="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.PocketTaxi.NoTitleBar" >
+        
+        <uses-library android:name="com.google.android.maps" />
+
+        <activity
+            android:label="@string/app_name"
+            android:name=".TaxiRequestActivity" >
+            
+            <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            
         </activity>
-		<activity android:name=".TaxiLocationMapActivity" android:label="@string/app_name"/>
+        
+        <activity
+            android:label="@string/app_name"
+            android:name=".TaxiLocationMapActivity" />
     </application>
-    
-	<!-- Permissões GPS -->
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-	<uses-permission android:name="android.permission.INTERNET" />
-<!--    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
-<!-- 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
-<!-- 	<uses-permission android:name="android.permission.INTERNET" /> -->
-<!-- 	    <uses-permission android:name="android.permission.ACCESS_GPS" />  -->
-<!--     <uses-permission android:name="android.permission.ACCESS_LOCATION" /> -->
-<!--     <uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />  -->
-<!-- 	<uses-permission android:name="android.permission.ACCESS_CELL_ID" /> -->
-<!-- 	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/> -->
-    
+
+    <!-- Permissões GPS -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
 </manifest>

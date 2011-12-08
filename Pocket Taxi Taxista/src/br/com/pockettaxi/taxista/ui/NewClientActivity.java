@@ -58,9 +58,11 @@ public class NewClientActivity extends Activity{
 		.setPositiveButton(getString(R.string.yes),new DialogInterface.OnClickListener() {
 			
 			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
+			public void onClick(DialogInterface dialog, int arg1) {
 				try {
 					accept(client);
+					dialog.dismiss();
+					finish();
 				} catch (IllegalStateException e) {
 					Log.e(CATEGORIA, e.getMessage(), e);
 				} catch (IOException e) {

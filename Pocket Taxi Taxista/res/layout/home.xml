@@ -2,8 +2,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
-
+    android:orientation="vertical" android:background="@drawable/bg">
+    
+    <include layout="@layout/action_bar_home" />
+    
     <LinearLayout
         android:id="@+id/viewParent"
         android:layout_width="fill_parent"
@@ -16,19 +18,18 @@
             style="@style/.wait_client"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.26"
-            android:drawableTop="@drawable/espera"
             android:onClick="showLogin"
             android:text="Aguardar Cliente" />
+<!--             android:drawableTop="@drawable/espera" -->
     </LinearLayout>
 
     <TextView
         android:id="@+id/txt_info_service"
-        style="@style/.wait_client"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Aguardando cliente..."
-        android:visibility="invisible" />
+        android:visibility="invisible" 
+        android:textColor="@android:color/white"/>
 
 </FrameLayout>
