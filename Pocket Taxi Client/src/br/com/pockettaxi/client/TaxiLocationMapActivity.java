@@ -75,7 +75,7 @@ public class TaxiLocationMapActivity extends MapActivity {
 		clientLocation = new Position(client.getLatitude(),
 				client.getLongitude());
 		iconTaxista = getResources().getDrawable(R.drawable.icon_taxi);
-		iconClient = getResources().getDrawable(R.drawable.finish);
+		iconClient = getResources().getDrawable(R.drawable.icon_client);
 	}
 
 	private void setAndInitializeMap() {

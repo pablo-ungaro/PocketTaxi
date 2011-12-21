@@ -29,9 +29,12 @@ public final class R {
         public static final int action_bar_locate=0x7f020006;
         public static final int bg=0x7f020007;
         public static final int dashboard=0x7f020008;
-        public static final int finish=0x7f020009;
+        public static final int finish2=0x7f020009;
         public static final int icon=0x7f02000a;
-        public static final int icon_taxi=0x7f02000b;
+        public static final int icon2=0x7f02000b;
+        public static final int icon_client=0x7f02000c;
+        public static final int icon_taxi=0x7f02000d;
+        public static final int icon_taxi2=0x7f02000e;
     }
     public static final class id {
         public static final int action_bar_item=0x7f070004;
