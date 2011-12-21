@@ -27,11 +27,9 @@ public final class R {
         public static final int action_bar_item_pressed=0x7f020005;
         public static final int bg=0x7f020006;
         public static final int current_position=0x7f020007;
-        public static final int current_position2=0x7f020008;
-        public static final int icon=0x7f020009;
-        public static final int icon_has_client=0x7f02000a;
-        public static final int new_client=0x7f02000b;
-        public static final int new_client2=0x7f02000c;
+        public static final int icon=0x7f020008;
+        public static final int icon_has_client=0x7f020009;
+        public static final int new_client=0x7f02000a;
     }
     public static final class id {
         public static final int action_bar_item=0x7f070005;
