@@ -18,7 +18,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
@@ -28,9 +30,10 @@ import br.com.pockettaxi.model.StatusCode;
 import br.com.pockettaxi.taxista.R;
 import br.com.pockettaxi.utils.Util;
 
-public class SetCurrentPositionService extends Service {
+public class SetCurrentPositionService extends Service implements LocationListener {
 	private Handler handler = new Handler();
 	private boolean isActive = false;
+	private Location myCurrentLocation;
 	@Override
 	public void onCreate() {
 		stopService(new Intent("CHECKER_CLIENT_SERVICE"));
@@ -75,12 +78,13 @@ public class SetCurrentPositionService extends Service {
 	
 	private Location getMyCurrentLocation() {
 		LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 		Location currentLocation = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
 		if (currentLocation == null) {
 			currentLocation = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 			if(currentLocation == null){
-				currentLocation = new Location(LocationManager.GPS_PROVIDER);
+				return myCurrentLocation;
 			}
 		}
 	
@@ -114,5 +118,21 @@ public class SetCurrentPositionService extends Service {
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.cancel(R.string.notification_checker_id);
 		isActive = false;
+		LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locManager.removeUpdates(this);
 	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+			this.myCurrentLocation = location;
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {}
+
+	@Override
+	public void onProviderEnabled(String provider) {}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {}
 }

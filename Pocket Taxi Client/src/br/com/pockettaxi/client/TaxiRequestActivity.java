@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,16 +39,54 @@ import br.com.pockettaxi.model.Client;
 import br.com.pockettaxi.model.Taxi;
 import br.com.pockettaxi.utils.Util;
 
-public class TaxiRequestActivity extends Activity {
+public class TaxiRequestActivity extends Activity implements LocationListener{
 	private Handler handler = new Handler();
+	private Location myCurrentPosition;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		configureGPSListener();
 		setContentView(R.layout.home);
 	}
 	
-    public void showLogin(View v) {
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if(!getLocationManager().isProviderEnabled(LocationManager.GPS_PROVIDER)){
+			new AlertDialog.Builder(this)
+			.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					finish();
+				}
+			})
+			.setMessage("GPS is disabled")
+			.create()
+			.show();
+		}
+	}
+	private ProgressDialog waitGPS; 
+    private void configureGPSListener() {
+    	getLocationManager().requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+    	waitGPS = ProgressDialog.show(TaxiRequestActivity.this,
+				null,"Aguardando GPS...",true, false);
+	}
+    
+    private LocationManager getLocationManager(){
+    	return (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    }
+    
+	@Override
+	public void onLocationChanged(Location location) {
+		if(location != null){
+			this.myCurrentPosition = location;
+			waitGPS.dismiss();
+		}	
+	}
+
+	public void showLogin(View v) {
     	LayoutInflater inflater = getLayoutInflater();
 		final View customDialogView = inflater.inflate(R.layout.login_custom_dialog,
 		                               (ViewGroup) findViewById(R.id.lg_custom));
@@ -93,7 +132,6 @@ public class TaxiRequestActivity extends Activity {
 			@Override
 			public void run() {
 				try {					
-					Location myCurrentPosition = getMyCurrentLocation();
 					Geocoder geocoder = new Geocoder(TaxiRequestActivity.this, Locale.getDefault());
 					Map<Object,Object> parameters = new HashMap<Object, Object>();
 					Address address = geocoder.getFromLocation(myCurrentPosition.getLatitude(), myCurrentPosition.getLongitude(), 1).get(0);
@@ -144,21 +182,6 @@ public class TaxiRequestActivity extends Activity {
 		return address.getAddressLine(0).concat(", "+address.getAddressLine(1));
 	}
 
-	private Location getMyCurrentLocation() {
-		LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		Location currentLocation = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-		if (currentLocation == null) {
-			currentLocation = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-			Util.showMessage(TaxiRequestActivity.this,handler,"GPS desabilitado, obtendo localização pela rede.",Toast.LENGTH_LONG);					
-			if(currentLocation == null){
-				currentLocation = new Location(LocationManager.GPS_PROVIDER);
-			}
-		}
-		
-		return currentLocation;
-	}
-
 	private void openMapWithTaxiLocation(final Taxi taxi,final Client client) {
 			handler.post(new Runnable() {
 
@@ -173,4 +196,19 @@ public class TaxiRequestActivity extends Activity {
 				}
 			});		
 	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		getLocationManager().removeUpdates(this);
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {}
+
+	@Override
+	public void onProviderEnabled(String provider) {}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {}
 }

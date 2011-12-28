@@ -6,6 +6,6 @@
     <string name="message_pdialog_locate_taxi">Localizando táxi...</string>
     <string name="watermark">Login</string> 
     <string name="login_invalid">Login inválido</string>        
-    <string name="google_map_api_key_debug">0PJEwP5On_eASpW549v8Ft0VPpZCJI1dGzx89NA</string>
+    <string name="google_map_api_key_debug">0PJEwP5On_eB5JE4MFf6IYO0j1dm-wUas7PeCyg</string>
     <string name="home">Dashboard</string>        
 </resources>
